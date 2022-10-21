@@ -1,18 +1,15 @@
+title {
+    font-family: 'Open Sans', 'sans-serif'; 
+    font-size: 5rem; 
+    color: white;
+}
+
 body {
     height: 150vh;
     font-family: 'Open Sans', sans-serif;
     font-weight: 300; 
-    background-image: linear-gradient(to bottom right, #00adb5, #1f2f98); 
+    background-image: linear-gradient(to bottom right, #eca069, #f8a6d3); 
     background-repeat: none; 
-}
-
-h1 {
-    font-family: 'Open Sans', sans-serif;
-}
-
-.lead {
-    color: white; 
-    font-size: 2.2 rem; 
 }
 
 .btn-outline-light {
