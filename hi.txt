@@ -1,0 +1,1 @@
+https://www.sqlshack.com/how-to-connect-to-a-remote-sql-server/
