@@ -1,0 +1,21 @@
+title {
+    font-family: 'Open Sans', 'sans-serif'; 
+    font-size: 5rem; 
+    color: white;
+}
+
+body {
+    height: 150vh;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300; 
+    background-image: linear-gradient(to bottom right, #eca069, #f8a6d3); 
+    background-repeat: none; 
+}
+
+.btn-outline-light {
+    border-color: white; 
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.199);
+}
