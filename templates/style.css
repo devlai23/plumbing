@@ -1,12 +1,51 @@
+body {
+    background-color:rgb(250, 245, 239);
+    color: black; 
+
+}
+
 .title-section {
-    background-image: linear-gradient(to bottom right, #ffcc74, #fda1e6);
+    position:fixed; 
+    padding-top: 20px; 
+    padding-bottom: 20px;
+    background-color: rgb(255, 227, 202);
+    border-style: solid; 
+    border-color: rgba(178, 143, 61, 0.841);
+    width:100%; 
 }
 
 .title {
-    font-family: sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px;
+    text-align: center; 
+    color: rgb(182, 144, 56, 0.841);
+}
+
+.welcome-section {
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    padding-top:140px;
+    padding-bottom: 20px; 
+}
+
+.welcome {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 50px; 
+    text-align: center; 
+    color:darkolivegreen;
 }
 
 img {
-    width: 400px;
-    height: auto;
-  }
+    width: 60px; 
+    height: auto; 
+    padding-left: 10px; 
+}
+
+.create-account {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px; 
+    padding-bottom: 40px; 
+    padding-left: 20px; 
+    color:darkolivegreen;
+}
