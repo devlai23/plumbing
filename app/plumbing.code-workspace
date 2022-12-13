@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../../../Program Files/heroku"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "plumbing"
+	}
+}
