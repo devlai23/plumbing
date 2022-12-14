@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/analytics.css">
+
+    <title>Analytics</title>
+
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <link href="/path/to/dist/jquery-dm-select-show.css" rel="stylesheet" />
+    <script src="/path/to/cdn/jquery.slim.min.js"></script>
+    <script src="/path/to/dist/jquery-dm-select-show.min.js"></script>
+
+</head>
+<body>
+    <div class="navbar">
+        <a class="active" href="index.html">Home</a>
+        <a href="analytics.html">Analytics</a>
+    </div>
+
+    <div class = "title-section"> 
+        <h1 class = "title">ANALYTICS</h1>
+    </div>
+
+    <h1 class = "top-5-head">Top 5 most POPULAR products:</h1>
+    <div class = "top-5-products" id = "top-5-products">
+    </div>
+
+    <script>
+        anychart.onDocumentReady(function() {
+            var data = anychart.data.set([
+            ["Matcha Tea", 24],
+            ["Churro ", 20],
+            ["Original Rice Hot Dog", 19],
+            ["Potato Half Rice Hot Dog", 13],
+            ["Matcha Mochinut", 10]
+            ]); 
+
+            // create the chart
+            var chart = anychart.pie(data); 
+
+            chart.container('top-5-products'); 
+
+            chart
+                .innerRadius('65%')
+                .explode(25)
+
+            var label = anychart.standalones.label(); 
+            label
+                .enabled(true)
+                .text('Top 5 most POPULAR products')
+                .width('100%')
+                .height('100%')
+                .adjustFontSize(true, true)
+                .minFontSize(20)
+                .maxFontSize(30)
+                .fontColor('darkolivegreen')
+                .position('center')
+                .anchor('center')
+                .hAlign('center')
+                .vAlign('middle'); 
+
+            chart.center().content(label); 
+
+            chart.hovered().fill('darkolivegreen'); 
+            chart.selected().fill('olive'); 
+
+            chart
+                .hovered()
+                .outline()
+                .fill(function() {
+                    return anychart.color.lighten('darkolivegreen', 0.55);
+                }); 
+
+            chart
+                .selected()
+                .outline()
+                .offset(5)
+                .fill(function () {
+                return anychart.color.lighten('olive', 0.25);
+            });
+
+            chart.draw(); 
+             
+        });  
+    </script>
+
+    <div id="list">
+        <label for = "top-buyers" style="font-size: 40px; color:darkolivegreen;font-family:Montserrat, sans-serif; margin-left:20px">TOP Buyers For: </label>
+        <select class="option_select" style="font-size:40px; color:darkolivegreen; font-family:Montserrat, sans-serif" id="top-buyers">
+            <option value="0">Unselected</option>
+            <option value="1">Hot Dog</option>
+            <option value="2">Bubble Tea</option>
+            <option value="3">Mochinut</option>
+            <option value="4">Spicy Rice Cakes</option>
+        </select>
+
+        <div class="content">
+            <div class="option_element" data-option="0">
+                Choose a Category to See Analytics
+            </div>
+            <div class="option_element" data-option="1">
+                <ol>
+                    <li>Harry Potter</li>
+                    <li>Draco Malfoy</li>
+                    <li>Hermione Granger</li>
+                    <li>Ron Weasley</li>
+                    <li>Severus Snape</li>
+                </ol>
+            </div>
+            <div class="option_element" data-option="2">
+                <ol>
+                    <li>Percy Jackson</li>
+                    <li>Annabeth Chase</li>
+                    <li>Thalia Grace</li>
+                    <li>Nico di Angelo</li>
+                    <li>Luke Castellan</li>
+                </ol>
+            </div>
+            <div class="option_element" data-option="3">
+                <ol>
+                    <li>Padme Amidala</li>
+                    <li>Anakin Skywalker</li>
+                    <li>ObiWan Kenobi</li>
+                    <li>Boba Fett</li>
+                    <li>Han Solo</li>
+                </ol>
+            </div>
+            <div class="option_element" data-option="4">
+                <ol>
+                    <li>Nathasha Romanoff</li>
+                    <li>Steve Rogers</li>
+                    <li>Tony Stark</li>
+                    <li>Thor Odinson</li>
+                    <li>Wanda Maximoff</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function(){
+            $('#list').selectShow();
+        });
+
+        $('#list').selectShow({
+            ShowElement:0
+        }); 
+
+        $('#list').selectShow({
+            SelectOption:'.option_select',
+            ListElement:'.option_element'
+        })
+    </script>
+
+
+</body>
+</html>
