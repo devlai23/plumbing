@@ -15,9 +15,7 @@
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
     <link href="/path/to/dist/jquery-dm-select-show.css" rel="stylesheet" />
-    <script src="/path/to/cdn/jquery.slim.min.js"></script>
-    <script src="/path/to/dist/jquery-dm-select-show.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="navbar">
@@ -29,8 +27,79 @@
         <h1 class = "title">ANALYTICS</h1>
     </div>
 
-    <h1 class = "top-5-head">Top 5 most POPULAR products:</h1>
-    <div class = "top-5-products" id = "top-5-products">
+    <div class="inside">
+        <div class="split left">
+            <h1 class = "top-5-head">Top 5 most POPULAR products:</h1>
+            <div class = "top-5-products" id = "top-5-products"></div>        
+        </div>
+
+        <div class = "split right">
+            <div class="wrapper">
+                <div class="list">
+                    <label for = "top-buyers" style="font-size: 40px">TOP Buyers This Week For: </label>
+                    <select id="top-buyers" style="font-size:40px; color:darkolivegreen">
+                        <option value="unselected">Unselected</option>
+                        <option value="hot-dog">Hot Dog</option>
+                        <option value="bubble-tea">Bubble Tea</option>
+                        <option value="mochinut">Mochinut</option>
+                        <option value="spicy-rice-cakes">Spicy Rice Cakes</option>
+                    </select>
+            
+                    <div class="content">
+                        <div id ="unselected" class="data">
+                            <h4>Choose a Category to See Analytics</h4>
+                        </div>
+                        <div id ="hot-dog" class="data">
+                            <ol>
+                                <li>Harry Potter</li>
+                                <li>Draco Malfoy</li>
+                                <li>Hermione Granger</li>
+                                <li>Ron Weasley</li>
+                                <li>Severus Snape</li>
+                            </ol>
+                        </div>
+                        <div id ="bubble-tea" class="data">
+                            <ol>
+                                <li>Percy Jackson</li>
+                                <li>Annabeth Chase</li>
+                                <li>Thalia Grace</li>
+                                <li>Nico di Angelo</li>
+                                <li>Luke Castellan</li>
+                            </ol>
+                        </div>
+                        <div id ="mochinut" class="data">
+                            <ol>
+                                <li>Padme Amidala</li>
+                                <li>Anakin Skywalker</li>
+                                <li>ObiWan Kenobi</li>
+                                <li>Boba Fett</li>
+                                <li>Han Solo</li>
+                            </ol>
+                        </div>
+                        <div id ="spicy-rice-cakes" class="data">
+                            <ol>
+                                <li>Nathasha Romanoff</li>
+                                <li>Steve Rogers</li>
+                                <li>Tony Stark</li>
+                                <li>Thor Odinson</li>
+                                <li>Wanda Maximoff</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="split bottom">
+            <div class="birthdays">
+                <h1 class = "birthday-h1">Birthdays Coming Up in the NEXT Week</h1>
+                <ul>
+                    <li>Devon Lai, devlai23@bergen.org</li>
+                    <li>Daniel Hogan, danhog23@bergen.org</li>
+                    <li>Natalie Kim, natakim23@bergen.org</li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -92,72 +161,13 @@
         });  
     </script>
 
-    <div id="list">
-        <label for = "top-buyers" style="font-size: 40px; color:darkolivegreen;font-family:Montserrat, sans-serif; margin-left:20px">TOP Buyers For: </label>
-        <select class="option_select" style="font-size:40px; color:darkolivegreen; font-family:Montserrat, sans-serif" id="top-buyers">
-            <option value="0">Unselected</option>
-            <option value="1">Hot Dog</option>
-            <option value="2">Bubble Tea</option>
-            <option value="3">Mochinut</option>
-            <option value="4">Spicy Rice Cakes</option>
-        </select>
-
-        <div class="content">
-            <div class="option_element" data-option="0">
-                Choose a Category to See Analytics
-            </div>
-            <div class="option_element" data-option="1">
-                <ol>
-                    <li>Harry Potter</li>
-                    <li>Draco Malfoy</li>
-                    <li>Hermione Granger</li>
-                    <li>Ron Weasley</li>
-                    <li>Severus Snape</li>
-                </ol>
-            </div>
-            <div class="option_element" data-option="2">
-                <ol>
-                    <li>Percy Jackson</li>
-                    <li>Annabeth Chase</li>
-                    <li>Thalia Grace</li>
-                    <li>Nico di Angelo</li>
-                    <li>Luke Castellan</li>
-                </ol>
-            </div>
-            <div class="option_element" data-option="3">
-                <ol>
-                    <li>Padme Amidala</li>
-                    <li>Anakin Skywalker</li>
-                    <li>ObiWan Kenobi</li>
-                    <li>Boba Fett</li>
-                    <li>Han Solo</li>
-                </ol>
-            </div>
-            <div class="option_element" data-option="4">
-                <ol>
-                    <li>Nathasha Romanoff</li>
-                    <li>Steve Rogers</li>
-                    <li>Tony Stark</li>
-                    <li>Thor Odinson</li>
-                    <li>Wanda Maximoff</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-
     <script>
-        $(function(){
-            $('#list').selectShow();
-        });
-
-        $('#list').selectShow({
-            ShowElement:0
+        $(document).ready(function() {
+            $("#top-buyers").on('change', function() {
+                $(".data").hide(); 
+                $("#" + $(this).val()).fadeIn(700); 
+            }).change(); 
         }); 
-
-        $('#list').selectShow({
-            SelectOption:'.option_select',
-            ListElement:'.option_element'
-        })
     </script>
 
 
