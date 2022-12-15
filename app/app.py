@@ -14,6 +14,10 @@ mysql = MySQL(app)
 def home():
     return render_template("index.html")
 
+@app.route("/index.html")
+def index():
+    return render_template("index.html")
+
 @app.route("/analytics.html")
 def analytics():
     return render_template("analytics.html")
