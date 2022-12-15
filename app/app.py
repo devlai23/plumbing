@@ -12,7 +12,7 @@ mysql = MySQL(app)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("login.html")
 
 @app.route("/index.html")
 def index():
@@ -21,8 +21,12 @@ def index():
 @app.route("/analytics.html")
 def analytics():
     return render_template("analytics.html")
-    
+
 @app.route("/", methods=['POST'])
+def log():
+    return render_template("index.html")
+    
+@app.route("/index.html", methods=['POST'])
 def post():
     text = request.form
     cur = mysql.connection.cursor()
