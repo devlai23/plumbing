@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 from authlib.integrations.flask_client import OAuth
+from urllib.parse import quote_plus, urlencode
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -49,6 +50,27 @@ def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
     return redirect("/index.html")
+
+@app.route("/logout.html")
+def logout():
+    return oauth.auth0.authorize_redirect(
+        redirect_uri=url_for("out", _external=True)
+    )
+
+@app.route("/out")
+def out():
+    session.clear()
+    return redirect(
+        "https://" + env.get("AUTH0_DOMAIN")
+        + "/v2/logout?"
+        + urlencode(
+            {
+                "returnTo": url_for("login", _external=True),
+                "client_id": env.get("AUTH0_CLIENT_ID"),
+            },
+            quote_via=quote_plus,
+        )
+    )
 
 @app.route("/analytics.html")
 def analytics():
