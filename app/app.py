@@ -28,22 +28,17 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
 )
 
-
 mysql = MySQL(app)
-
-# @app.route("/")
-# def home():
-#     return render_template("login.html")
-
-@app.route("/index.html")
-def index():
-    return render_template("index.html")
 
 @app.route("/")
 def login():
     return oauth.auth0.authorize_redirect(
         redirect_uri=url_for("callback", _external=True)
     )
+
+@app.route("/index.html")
+def index():
+    return render_template("index.html")
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
@@ -95,7 +90,6 @@ def post():
     cur.execute(command)
     mysql.connection.commit()
     return render_template("index.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
