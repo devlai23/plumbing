@@ -133,7 +133,7 @@ select {
     border:2px solid darkolivegreen;
 }
 
-.birthdays {
+.database {
     font-family:'Montserrat', sans-serif;
     font-size: 17px; 
     color:darkolivegreen;
@@ -145,6 +145,3 @@ select {
     height:40%; 
 }
 
-.birthday-h1 {
-    margin-left:20px;
-}
