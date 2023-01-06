@@ -93,42 +93,29 @@
         </div>
 
         <div class="split bottom">
-            <div class="database">
-                <table class="searchable sortable">
+            <div class="table-container">
+                <table class="data-table">
                     <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Customer ID</th>
-                        <th>Date Registered</th>
-                        <th>Email</th>
-                        <th>Birthday</th>
-                     </tr>
+                        <tr>
+                        <th><button id="memberid">Member ID</button></th>
+                        <th><button id="name">Customer</button></th>
+                        <th><button id="phone">Phone</button></th>
+                        <th><button id="reg-date">Reg Date</button></th>
+                        <th><button id="birthday">Birthday</button></th>
+                        <th><button id="email">Email</button></th>
+                        <th><button id="points">Points</button></th>
+                        <th><button id="spent">Spent</button></th>
+                        <th><button id="rank">Rank</button></th>
+                        </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                       <td>Devon Lai</td>
-                       <td>2012012011</td>
-                       <td>01/03/23</td>
-                       <td>devonlai@gmail.com</td>
-                       <td>01/01/01</td>
-                      </tr>
-                      <tr>
-                        <td>Natalie Kim</td>
-                        <td>2082082088</td>
-                        <td>01/03/23</td>
-                        <td>nataliekim@gmail.com</td>
-                        <td>02/02/02</td>
-                      </tr>
-                      <tr>
-                        <td>Daniel Hogan</td>
-                        <td>2042042044</td>
-                        <td>01/03/23</td>
-                        <td>danielhogan@gmail.com</td>
-                        <td>03/03/03</td>
-                      </tr>
-                     </tbody>
-                   </table>
+                    <tbody id="table-content"></tbody>
+                </table>
             </div>
+
+            <form action = "/success" method = "post" enctype = "multipart/form-data">
+                <input type = "file" name = "file" />
+                <input type = "submit" value="Upload" />
+            </form>
         </div>
     </div>
 
