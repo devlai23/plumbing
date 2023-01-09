@@ -69,7 +69,7 @@ def out():
 
 @app.route("/analytics.html")
 def analytics():
-    return render_template("analytics.html")
+    return render_template("analytics.html") 
 
 @app.route("/", methods=['POST'])
 def log():
@@ -90,6 +90,13 @@ def post():
     cur.execute(command)
     mysql.connection.commit()
     return render_template("index.html")
+
+@app.route("/success", methods = ['POST'])
+def success():  
+    if request.method == 'POST':  
+        f = request.files['file']
+        f.save(f.filename)  
+        return render_template("analytics.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
