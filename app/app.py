@@ -96,6 +96,13 @@ def success():
     if request.method == 'POST':  
         f = request.files['file']
         f.save(f.filename)  
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT Invoice_ID from Purchases order by Invoice_ID desc limit 1")
+        mysql.connection.commit()
+        print(str(cur.fetchall()))
+
+
         return render_template("analytics.html")
 
 if __name__ == "__main__":
