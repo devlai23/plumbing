@@ -190,17 +190,113 @@
     <script>
          const response = {
         "mochidata": [
-            "memberid": 2012012011,
-            "name": "Devon Lai",
-            "phone": 2012012011,
-            "reg-date": "01/01/01",
-            "birthday": "08/06/05",
-            "email":"natakim23@bergen.org",
-            "points":23,
-            "spent":"$23.00",
-            "rank":2
+            {
+                "memberid": 2012012011,
+                "name": "Devon Lai",
+                "phone": 2012012011,
+                "reg-date": "01/01/22",
+                "birthday": "01/02/03",
+                "email":"devlai23@bergen.org",
+                "points":23,
+                "spent":"$23.00",
+                "rank":2
+            },
+            {
+                "memberid": 2012082088,
+                "name": "Natalie Kim",
+                "phone": 2012082088,
+                "reg-date": "01/01/22",
+                "birthday": "03/03/04",
+                "email":"natakim23@bergen.org",
+                "points":37,
+                "spent":"37.00",
+                "rank":1
+            },
+            {
+                "memberid": 2012042044,
+                "name": "Daniel Hogan",
+                "phone": 2012042044,
+                "reg-date": "03/01/19",
+                "birthday": "05/05/05",
+                "email":"danhog23@bergen.org",
+                "points":23,
+                "spent":"$23.00",
+                "rank":3
+            }
         ]
         }
+        const tableContent = document.getElementById("table-content")
+        const tableButtons = document.querySelectorAll("th button");
+
+        const createRow = (obj) => {
+        const row = document.createElement("tr");
+        const objKeys = Object.keys(obj);
+        objKeys.map((key) => {
+            const cell = document.createElement("td");
+            cell.setAttribute("data-attr", key);
+            cell.innerHTML = obj[key];
+            row.appendChild(cell);
+        });
+        return row;
+        };
+
+        const getTableContent = (data) => {
+        data.map((obj) => {
+            const row = createRow(obj);
+            tableContent.appendChild(row);
+        });
+        };
+
+        const sortData = (data, param, direction = "asc") => {
+        tableContent.innerHTML = '';
+        const sortedData =
+            direction == "asc"
+            ? [...data].sort(function (a, b) {
+                if (a[param] < b[param]) {
+                    return -1;
+                }
+                if (a[param] > b[param]) {
+                    return 1;
+                }
+                return 0;
+                })
+            : [...data].sort(function (a, b) {
+                if (b[param] < a[param]) {
+                    return -1;
+                }
+                if (b[param] > a[param]) {
+                    return 1;
+                }
+                return 0;
+                });
+
+        getTableContent(sortedData);
+        };
+
+        const resetButtons = (event) => {
+        [...tableButtons].map((button) => {
+            if (button !== event.target) {
+            button.removeAttribute("data-dir");
+            }
+        });
+        };
+
+        window.addEventListener("load", () => {
+        getTableContent(response.mochidata);
+
+        [...tableButtons].map((button) => {
+            button.addEventListener("click", (e) => {
+            resetButtons(e);
+            if (e.target.getAttribute("data-dir") == "desc") {
+                sortData(response.mochidata, e.target.id, "desc");
+                e.target.setAttribute("data-dir", "asc");
+            } else {
+                sortData(response.mochidata, e.target.id, "asc");
+                e.target.setAttribute("data-dir", "desc");
+            }
+            });
+        });
+        });
     </script>
 
 
