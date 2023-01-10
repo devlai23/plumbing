@@ -4,7 +4,14 @@ from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 from authlib.integrations.flask_client import OAuth
 from urllib.parse import quote_plus, urlencode
+import Order
+import os
+import xlwt
+import xlrd
+from xlutils.copy import copy
+import sys
 
+ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -97,11 +104,34 @@ def success():
         f = request.files['file']
         f.save(f.filename)  
 
+        #finding lastPos
         cur = mysql.connection.cursor()
         cur.execute("SELECT Invoice_ID from Purchases order by Invoice_ID desc limit 1")
         mysql.connection.commit()
-        print(str(cur.fetchall()))
+        lastPos = str(cur.fetchall())
+        newString = ""
+        for char in lastPos:
+            if ord(char) > 47 and ord(char) < 58:
+                newString += char
+        lastPos = int(newString)
 
+
+        #looping through excel files
+        cshPath = ""
+        for file in os.listdir(ROOT_DIR):
+            if (file[0:10] == "Customer S"):
+                cshPath = file
+                break
+        book = xlrd.open_workbook("app/"+cshPath)
+        bookSheet = book.sheet_by_index(0)
+        for row in range(0, bookSheet.nrows):
+            
+
+        
+
+
+
+        #DONT FORGET TO DELETE FILES AFTER PUTTING IN DATABASE
 
         return render_template("analytics.html")
 
