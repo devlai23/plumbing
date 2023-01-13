@@ -101,8 +101,9 @@ def post():
 @app.route("/success", methods = ['POST'])
 def success():  
     if request.method == 'POST':  
-        f = request.files['file']
-        f.save(f.filename)  
+        files = request.files.getlist("file")
+        for file in files:
+            file.save(file.filename)
 
         #finding lastPos
         cur = mysql.connection.cursor()
@@ -122,12 +123,37 @@ def success():
             if (file[0:10] == "Customer S"):
                 cshPath = file
                 break
-        book = xlrd.open_workbook("app/"+cshPath)
+        book = xlrd.open_workbook(cshPath)
+        bookSheet = book.sheet_by_index(0)
+        newOrders = []
+        for row in range(0, bookSheet.nrows):
+            value = str(bookSheet.cell(row, 0).value)
+            newValue = ""
+            for char in value:
+                if ord(char) > 47 and ord(char) < 58:
+                    newValue += char
+                else:
+                    break
+            #if true, it's a new order
+            if newValue != "" and int(newValue) > lastPos:
+                order = Order.Order(int(newValue), bookSheet.cell(row, 1).value, bookSheet.cell(row, 2).value)
+                newOrders.append(order)
+        
+        #looping through second file
+        cshPath = ""
+        for file in os.listdir(ROOT_DIR):
+            if (file[0:10] == "Customer H"):
+                cshPath = file
+                break
+        book = xlrd.open_workbook(cshPath)
         bookSheet = book.sheet_by_index(0)
         for row in range(0, bookSheet.nrows):
-            
+            value = str(bookSheet.cell(row, 2).value)
+            for order in newOrders:
+                if value == order.getInvoice():
+                    order.setCustomerID()
 
-        
+
 
 
 

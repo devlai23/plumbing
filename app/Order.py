@@ -7,3 +7,9 @@ class Order:
 
     def setCustomerID(self, customerID):
         self.customerID = customerID
+
+    def getInvoice(self):
+        return self.invoiceID
+    
+    def __str__(self):
+     return str(self.invoiceID) + "\n" + str(self.date) + "\n" + str(self.item)
