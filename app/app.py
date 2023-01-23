@@ -10,6 +10,7 @@ import xlwt
 import xlrd
 from xlutils.copy import copy
 import sys
+import re
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -116,12 +117,14 @@ def success():
                 newString += char
         lastPos = int(newString)
 
-
+        path1 = ""
+        path2 = ""
         #looping through excel files
         cshPath = ""
         for file in os.listdir(ROOT_DIR):
             if (file[0:10] == "Customer S"):
                 cshPath = file
+                path1 = cshPath
                 break
         book = xlrd.open_workbook(cshPath)
         bookSheet = book.sheet_by_index(0)
@@ -138,26 +141,36 @@ def success():
             if newValue != "" and int(newValue) > lastPos:
                 order = Order.Order(int(newValue), bookSheet.cell(row, 1).value, bookSheet.cell(row, 2).value)
                 newOrders.append(order)
-        
+
+        for order in newOrders:
+            print(order.getInvoice())
+
         #looping through second file
         cshPath = ""
         for file in os.listdir(ROOT_DIR):
             if (file[0:10] == "Customer H"):
                 cshPath = file
+                path2 = file
                 break
         book = xlrd.open_workbook(cshPath)
         bookSheet = book.sheet_by_index(0)
         for row in range(0, bookSheet.nrows):
             value = str(bookSheet.cell(row, 2).value)
+            if value != "" and value != "Invoice #":
+                value = int(float(value))
             for order in newOrders:
                 if value == order.getInvoice():
-                    order.setCustomerID()
+                    customerID = str(bookSheet.cell(row, 1).value)
+                    # then this neworder was by a loyalty member. this order must be entered to database
+                    newCustomerID = int(re.sub("\\D+", "", customerID))
 
 
+        # for order in newOrders:
+        #     cur.execute(order.format())
+        #     mysql.connection.commit()
 
-
-
-        #DONT FORGET TO DELETE FILES AFTER PUTTING IN DATABASE
+        # os.remove(path1)
+        # os.remove(path2)
 
         return render_template("analytics.html")
 
