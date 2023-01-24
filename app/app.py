@@ -142,8 +142,6 @@ def success():
                 order = Order.Order(int(newValue), bookSheet.cell(row, 1).value, bookSheet.cell(row, 2).value)
                 newOrders.append(order)
 
-        for order in newOrders:
-            print(order.getInvoice())
 
         #looping through second file
         cshPath = ""
@@ -161,13 +159,17 @@ def success():
             for order in newOrders:
                 if value == order.getInvoice():
                     customerID = str(bookSheet.cell(row, 1).value)
+                    if customerID != "":
                     # then this neworder was by a loyalty member. this order must be entered to database
-                    newCustomerID = int(re.sub("\\D+", "", customerID))
+                        newCustomerID = int(re.sub("\\D+", "", customerID))
+                        order.setCustomerID(newCustomerID)
 
-
-        # for order in newOrders:
-        #     cur.execute(order.format())
-        #     mysql.connection.commit()
+        for order in newOrders:
+            if order.customerID != -1:
+                print(order.insertQuery())
+                cur.execute(order.insertQuery())
+                mysql.connection.commit()
+        
 
         # os.remove(path1)
         # os.remove(path2)
