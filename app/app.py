@@ -122,7 +122,7 @@ def success():
         path3 = ""
 
 
-        #looping through third file, to add new loyalty members
+        # SEARCH FOR NEW MEMBERS
         # cshPath = ""
         # for file in os.listdir(ROOT_DIR):
         #     if (file[0:10] == "Customer L"):
@@ -142,7 +142,7 @@ def success():
 
 
 
-        #looping through first file
+        # SEARCH FOR NEW ORDERS
         cshPath = ""
         for file in os.listdir(ROOT_DIR):
             if (file[0:10] == "Customer S"):
@@ -166,7 +166,7 @@ def success():
                 newOrders.append(order)
 
 
-        #looping through second file
+        # LINK ALL NEW ORDERS TO A CUSTOMER ID
         cshPath = ""
         for file in os.listdir(ROOT_DIR):
             if (file[0:10] == "Customer H"):
@@ -187,6 +187,7 @@ def success():
                         newCustomerID = int(re.sub("\\D+", "", customerID))
                         order.setCustomerID(newCustomerID)
 
+        # ADDING NEW ORDERS INTO THE DATABASE
         for order in newOrders:
             if order.customerID != -1:
                 cur.execute("select if("+ str(order.customerID) +" in (select Customer_ID from Customer), 1, 0)")
