@@ -119,7 +119,30 @@ def success():
 
         path1 = ""
         path2 = ""
-        #looping through excel files
+        path3 = ""
+
+
+        #looping through third file, to add new loyalty members
+        # cshPath = ""
+        # for file in os.listdir(ROOT_DIR):
+        #     if (file[0:10] == "Customer L"):
+        #         cshPath = file
+        #         path1 = cshPath
+        #         break
+        # book = xlrd.open_workbook(cshPath)
+        # bookSheet = book.sheet_by_index(0)
+        # for row in range(0, bookSheet.nrows):
+        #     value = str(bookSheet.cell(row, 2).value)
+        #     value = str(int(re.sub("\\D+", "", value)))
+        #     query = "Select if("+value+ "in (select Customer_ID from Customer), 1, 0)"
+        #     cur.execute(query)
+        #     rv = str(cur.fetchall())
+        #     if rv[2] == '0':
+        #         command = "INSERT INTO Customer VALUES(" + value + ", \'" + text.get("fname") + "\', \'" + text.get("lname") + "\', CAST(\'" + text.get("bday") + "\' as DATE), \'" + text.get("email") + "\')"
+
+
+
+        #looping through first file
         cshPath = ""
         for file in os.listdir(ROOT_DIR):
             if (file[0:10] == "Customer S"):
@@ -166,13 +189,22 @@ def success():
 
         for order in newOrders:
             if order.customerID != -1:
-                print(order.insertQuery())
-                cur.execute(order.insertQuery())
-                mysql.connection.commit()
+                cur.execute("select if("+ str(order.customerID) +" in (select Customer_ID from Customer), 1, 0)")
+                exists = str(cur.fetchall())
+                print(exists)
+                if exists[2] == "1":
+                    print(order.insertQuery())
+                    cur.execute(order.insertQuery())
+                    mysql.connection.commit()
+
+                # if a new order corresponds to a non-existing loyalty member
+                # else:
+
         
 
-        # os.remove(path1)
-        # os.remove(path2)
+        os.remove(path1)
+        os.remove(path2)
+        os.remove(path3)
 
         return render_template("analytics.html")
 
