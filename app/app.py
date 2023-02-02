@@ -94,7 +94,7 @@ def post():
 
     if rv[2] == '1':
         return render_template("index.html")
-    command = "INSERT INTO Customer VALUES(" + text.get("pnumber") + ", \'" + text.get("fname") + "\', \'" + text.get("lname") + "\', CAST(\'" + text.get("bday") + "\' as DATE), \'" + text.get("email") + "\')"
+    command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email) VALUES(" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") +  "\")"
     cur.execute(command)
     mysql.connection.commit()
     return render_template("index.html")
