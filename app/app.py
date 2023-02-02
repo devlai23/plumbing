@@ -123,23 +123,40 @@ def success():
 
 
         # SEARCH FOR NEW MEMBERS
-        # cshPath = ""
-        # for file in os.listdir(ROOT_DIR):
-        #     if (file[0:10] == "Customer L"):
-        #         cshPath = file
-        #         path1 = cshPath
-        #         break
-        # book = xlrd.open_workbook(cshPath)
-        # bookSheet = book.sheet_by_index(0)
-        # for row in range(0, bookSheet.nrows):
-        #     value = str(bookSheet.cell(row, 2).value)
-        #     value = str(int(re.sub("\\D+", "", value)))
-        #     query = "Select if("+value+ "in (select Customer_ID from Customer), 1, 0)"
-        #     cur.execute(query)
-        #     rv = str(cur.fetchall())
-        #     if rv[2] == '0':
-        #         command = "INSERT INTO Customer VALUES(" + value + ", \'" + text.get("fname") + "\', \'" + text.get("lname") + "\', CAST(\'" + text.get("bday") + "\' as DATE), \'" + text.get("email") + "\')"
-
+        cshPath = ""
+        for file in os.listdir(ROOT_DIR):
+            print(file)
+            if (file[0] == "B"):
+                cshPath = file
+                path1 = cshPath
+                break
+        book = xlrd.open_workbook(cshPath)
+        bookSheet = book.sheet_by_index(0)
+        for row in range(0, bookSheet.nrows):
+            value = str(bookSheet.cell(row, 11).value)
+            if value != "": 
+                value = str(int(re.sub("\\D+", "", value)))
+                query = "Select if("+value+ "in (select Customer_ID from Customer), 1, 0)"
+                cur.execute(query)
+                rv = str(cur.fetchall())
+                if rv[2] == '0':
+                    print("TEST")
+                    Customer_ID = value
+                    Customer_Name = str(bookSheet.cell(row, 0).value)
+                    Reg_Date = str(bookSheet.cell(row, 10).value)
+                    Customer_Bday = str(bookSheet.cell(row, 13).value)
+                    Customer_Email = str(bookSheet.cell(row, 14).value)
+                    Bonus = str(bookSheet.cell(row, 1).value)
+                    Bonus_Used = str(bookSheet.cell(row, 2).value)
+                    Sales_Total = str(bookSheet.cell(row, 3).value)
+                    Discount_Total = str(bookSheet.cell(row, 4).value)
+                    Discount_Ratio = str(bookSheet.cell(row, 5).value)
+                    Rank = str(bookSheet.cell(row, 7).value)
+                    Visit_Count = str(bookSheet.cell(row, 8).value)
+                    Last_Visit_Date = str(bookSheet.cell(row, 9).value)
+                    query = "INSERT INTO Customer VALUES(" + Customer_ID + ", \"" + Customer_Name + "\" , \"" + Reg_Date + "\" , \"" + Customer_Bday + "\" , \"" + Customer_Email + "\" , \"" + Bonus + "\" , \"" + Bonus_Used + "\" , \"" + Sales_Total + "\" , \"" + Discount_Total + "\" , \"" + Discount_Ratio + "\" ," + Rank + " ," + Visit_Count + " , \"" + Last_Visit_Date + "\")"
+                    cur.execute(query)
+                    mysql.connection.commit()
 
 
         # SEARCH FOR NEW ORDERS
@@ -197,9 +214,6 @@ def success():
                     print(order.insertQuery())
                     cur.execute(order.insertQuery())
                     mysql.connection.commit()
-
-                # if a new order corresponds to a non-existing loyalty member
-                # else:
 
         
 
