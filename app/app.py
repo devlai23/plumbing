@@ -125,22 +125,20 @@ def success():
         # SEARCH FOR NEW MEMBERS
         cshPath = ""
         for file in os.listdir(ROOT_DIR):
-            print(file)
             if (file[0] == "B"):
                 cshPath = file
-                path1 = cshPath
+                path3 = cshPath
                 break
         book = xlrd.open_workbook(cshPath)
         bookSheet = book.sheet_by_index(0)
-        for row in range(0, bookSheet.nrows):
-            value = str(bookSheet.cell(row, 11).value)
+        for row in range(2, bookSheet.nrows):
+            value = re.sub("\\D+", "", str(bookSheet.cell(row, 11).value))
             if value != "": 
-                value = str(int(re.sub("\\D+", "", value)))
-                query = "Select if("+value+ "in (select Customer_ID from Customer), 1, 0)"
+                value = str(int(value))
+                query = "Select if("+value+ " in (select Customer_ID from Customer), 1, 0)"
                 cur.execute(query)
                 rv = str(cur.fetchall())
                 if rv[2] == '0':
-                    print("TEST")
                     Customer_ID = value
                     Customer_Name = str(bookSheet.cell(row, 0).value)
                     Reg_Date = str(bookSheet.cell(row, 10).value)
@@ -209,9 +207,7 @@ def success():
             if order.customerID != -1:
                 cur.execute("select if("+ str(order.customerID) +" in (select Customer_ID from Customer), 1, 0)")
                 exists = str(cur.fetchall())
-                print(exists)
                 if exists[2] == "1":
-                    print(order.insertQuery())
                     cur.execute(order.insertQuery())
                     mysql.connection.commit()
 
