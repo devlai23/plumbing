@@ -120,6 +120,7 @@ def success():
         path1 = ""
         path2 = ""
         path3 = ""
+        path4 = ""
 
 
         # SEARCH FOR NEW MEMBERS
@@ -211,11 +212,24 @@ def success():
                     cur.execute(order.insertQuery())
                     mysql.connection.commit()
 
+        #Update all existing customer fields (Bonus, Bonus used, Sales total, etc. )
+        cshPath = ""
+        for file in os.listdir(ROOT_DIR):
+            if(file[0:10] == "Bonus Mile"):
+                cshPath = file
+                path4 = file
+                break
+        book = xlrd.open_workbook(cshPath)
+        bookSheet = book.sheet_by_index(0)
         
+
+
+                
 
         os.remove(path1)
         os.remove(path2)
         os.remove(path3)
+        os.remove(path4)
 
         return render_template("analytics.html")
 
