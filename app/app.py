@@ -75,6 +75,10 @@ def out():
         )
     )
 
+@app.route("/email.html")
+def email():
+    return render_template("email.html") 
+
 @app.route("/analytics.html")
 def analytics():
     return render_template("analytics.html") 
