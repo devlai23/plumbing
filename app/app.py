@@ -221,10 +221,44 @@ def success():
                 break
         book = xlrd.open_workbook(cshPath)
         bookSheet = book.sheet_by_index(0)
+        for row in range(6, bookSheet.nrows):
+            value = re.sub("\\D+", "", str(bookSheet.cell(row, 11).value))
+            name = str(bookSheet.cell(row, 0).value)
+            if(name == "Customer" or name == ""):
+                continue
+            bonus = str(bookSheet.cell(row, 1).value)
+            bonusUsed = str(bookSheet.cell(row,2).value)
+            salesTotal = str(bookSheet.cell(row, 3).value)
+            discountTotal = str(bookSheet.cell(row, 4).value)
+            discountRatio = str(bookSheet.cell(row, 5).value)
+            if(bookSheet.cell(row, 7).value != ""):
+                rank = str(int(bookSheet.cell(row, 7).value))
+            else:
+                rank = None
+            if(bookSheet.cell(row, 8).value != ""):
+                visitCount = str(int(bookSheet.cell(row, 8).value))
+            else:
+                visitCount = None
+            lastVisitDate = str(bookSheet.cell(row, 9).value)
+
+
+            if (value != "" ):
+                value = str(int(value))
+                query = "Select if("+value+ " in (select Customer_ID from Customer), 1, 0)"
+                cur.execute(query)
+                rv = str(cur.fetchall())
+                if rv[2] == '1':
+                    query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
+                    print(query)    
+                    cur.execute(query)
+                    mysql.connection.commit()
+                #update Customer set Customer_Name = "Test_User" where Customer_ID = 9999999999
+
+
         
 
 
-                
+
 
         os.remove(path1)
         os.remove(path2)
