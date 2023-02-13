@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_mysqldb import MySQL
+from flask_mail import Mail, Message
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 from authlib.integrations.flask_client import OAuth
@@ -18,12 +19,22 @@ if ENV_FILE:
     load_dotenv(ENV_FILE)
 
 app = Flask(__name__)
+mail = Mail(app)
 
 app.config["MYSQL_HOST"] = "soccerdb.calingaiy4id.us-east-2.rds.amazonaws.com"
 app.config["MYSQL_USER"] = "hog_kim_lai"
 app.config["MYSQL_PASSWORD"] = "7BVjbea4jUrF"
 app.config["MYSQL_DB"] = "capstone_2223_mochinut"
 app.secret_key = env.get("APP_SECRET_KEY")
+
+# configuration of mail
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'mochinutloyalty@gmail.com'
+app.config['MAIL_PASSWORD'] = 'smbjiqfaqlbwwzpr'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 oauth = OAuth(app)
 oauth.register(
@@ -78,6 +89,18 @@ def out():
 @app.route("/email.html")
 def email():
     return render_template("email.html") 
+
+@app.route("/email.html", methods=['POST'])
+def send():
+    msg = Message(
+                'Hello',
+                sender ='mochinutloyalty@gmail.com',
+                recipients = ['danhog23@bergen.org']
+               )
+    msg.body = request.form.getlist('email')[0]
+    #msg.attach('header.gif','image/gif',open(join(mail_blueprint.static_folder, 'header.gif'), 'rb').read(), 'inline', headers=[['Content-ID','<Myimage>'],])
+    mail.send(msg)
+    return render_template("email.html")
 
 @app.route("/analytics.html")
 def analytics():
@@ -217,13 +240,7 @@ def success():
                     mysql.connection.commit()
 
         #Update all existing customer fields (Bonus, Bonus used, Sales total, etc. )
-        cshPath = ""
-        for file in os.listdir(ROOT_DIR):
-            if(file[0:10] == "Bonus Mile"):
-                cshPath = file
-                path4 = file
-                break
-        book = xlrd.open_workbook(cshPath)
+        book = xlrd.open_workbook(path3)
         bookSheet = book.sheet_by_index(0)
         for row in range(6, bookSheet.nrows):
             value = re.sub("\\D+", "", str(bookSheet.cell(row, 11).value))
@@ -253,7 +270,6 @@ def success():
                 rv = str(cur.fetchall())
                 if rv[2] == '1':
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
-                    print(query)    
                     cur.execute(query)
                     mysql.connection.commit()
                 #update Customer set Customer_Name = "Test_User" where Customer_ID = 9999999999
@@ -267,7 +283,6 @@ def success():
         os.remove(path1)
         os.remove(path2)
         os.remove(path3)
-        os.remove(path4)
 
         return render_template("analytics.html")
 
