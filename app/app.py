@@ -270,7 +270,6 @@ def success():
                 rv = str(cur.fetchall())
                 if rv[2] == '1':
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
-                    print(query)    
                     cur.execute(query)
                     mysql.connection.commit()
                 #update Customer set Customer_Name = "Test_User" where Customer_ID = 9999999999
