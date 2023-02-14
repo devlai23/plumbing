@@ -141,12 +141,3 @@ select {
     margin-top: 20px; 
 }
 
-button {
-    margin-top: 20px; 
-    font-size: 25px; 
-    color: white; 
-    background-color:rgb(144, 169, 100); 
-    padding: 20px 37px; 
-    border: none; 
-    border-radius: 12px; 
-}
