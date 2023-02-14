@@ -1,0 +1,116 @@
+{# templates/analytics.html #}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/analytics.css') }}">
+
+
+    <title>Table</title>
+
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <link href="/path/to/dist/jquery-dm-select-show.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                <th><button id="memberid">Member ID</button></th>
+                <th><button id="name">Customer Name</button></th>
+                <th><button id="reg-date">Reg Date</button></th>
+                <th><button id="birthday">Birthday</button></th>
+                <th><button id="email">Email</button></th>
+                <th><button id="bonus">Bonus</button></th>
+                <th><button id="bonus_used">Bonus Used</button></th>
+                <th><button id="total_sales">Sales Total</button></th>
+                <th><button id="discount_total">Discount Total</button></th>
+                <th><button id="discount_ratio">Discount Ratio</button></th>
+                <th><button id="rank">Rank</button></th>
+                <th><button id="visit_count">Visit Count</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in mochidata %}
+                <tr>
+                    <td class = "c1">{{data.Customer_ID}}</td>
+                    <td class = "c2">{{data.Customer_Name}}</td>
+                    <td class = "c3">{{data.Reg_Date}}</td>
+                    <td class = "c4">{{data.Customer_Bday}}</td>
+                    <td class = "c5">{{data.Customer_Email}}</td>
+                    <td class = "c4">{{data.Bonus}}</td>
+                    <td class = "c4">{{data.Bonus_Used}}</td>
+                    <td class = "c4">{{data.Sales_Total}}</td>
+                    <td class = "c4">{{data.Discount_Total}}</td>
+                    <td class = "c4">{{data.Discount_Ratio}}</td>
+                    <td class = "c4">{{data.Rank}}</td>
+                    <td class = "c4">{{data.Visit_Count}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const sortData = (data, param, direction = "asc") => {
+        tableContent.innerHTML = '';
+        const sortedData =
+            direction == "asc"
+            ? [...data].sort(function (a, b) {
+                if (a[param] < b[param]) {
+                    return -1;
+                }
+                if (a[param] > b[param]) {
+                    return 1;
+                }
+                return 0;
+                })
+            : [...data].sort(function (a, b) {
+                if (b[param] < a[param]) {
+                    return -1;
+                }
+                if (b[param] > a[param]) {
+                    return 1;
+                }
+                return 0;
+                });
+
+        getTableContent(sortedData);
+        };
+
+        const resetButtons = (event) => {
+        [...tableButtons].map((button) => {
+            if (button !== event.target) {
+            button.removeAttribute("data-dir");
+            }
+        });
+        };
+
+        window.addEventListener("load", () => {
+        getTableContent(response.mochidata);
+
+        [...tableButtons].map((button) => {
+            button.addEventListener("click", (e) => {
+            resetButtons(e);
+            if (e.target.getAttribute("data-dir") == "desc") {
+                sortData(response.mochidata, e.target.id, "desc");
+                e.target.setAttribute("data-dir", "asc");
+            } else {
+                sortData(response.mochidata, e.target.id, "asc");
+                e.target.setAttribute("data-dir", "desc");
+            }
+            });
+        });
+        });
+    </script>
+
+
+</body>
+</html>

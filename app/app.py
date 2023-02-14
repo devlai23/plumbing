@@ -106,6 +106,24 @@ def send():
 def analytics():
     return render_template("analytics.html") 
 
+@app.route("/table.html")
+def table():
+    return render_template("table.html")
+
+@app.route("/table.html")
+def transferData():
+    cur = mysql.connection.cursor()
+    mochidata = []
+    query = "SELECT * FROM Customer"
+    cur.execute(query)
+    for i in cur.fetchall():
+        mochidata.append(i)
+    cur.close()
+
+    template.render(mochidata = mochidata)
+    return render_template("table.html")
+
+
 @app.route("/", methods=['POST'])
 def log():
     return render_template("index.html")
