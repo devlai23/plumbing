@@ -76,6 +76,14 @@ label {
     font-size:25px; 
 }
 
+.upload {
+    padding-top:50px; 
+}
+
+.radiobtn {
+    padding-top:50px; 
+}
+/*
 input {
     font-family:'Montserrat', sans-serif; 
     border:none;
@@ -84,7 +92,7 @@ input {
     border:1px solid darkolivegreen;
 }
 
-button {
+.submitbtn {
     font-size: 25px; 
     color: white; 
     background-color:rgb(144, 169, 100); 
