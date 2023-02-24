@@ -12,6 +12,7 @@ import xlrd
 from xlutils.copy import copy
 import sys
 import re
+import base64
 from jinja2 import Environment, FileSystemLoader
 
 ROOT_DIR = os.path.abspath(os.curdir)
@@ -93,13 +94,21 @@ def email():
 
 @app.route("/email.html", methods=['POST'])
 def send():
+
+    input_text = request.form.getlist('email')[0]
+
+    with open("image.jpg", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+
     msg = Message(
                 'Hello',
                 sender ='mochinutloyalty@gmail.com',
                 recipients = ['danhog23@bergen.org']
                )
-    msg.body = request.form.getlist('email')[0]
-    #msg.attach('header.gif','image/gif',open(join(mail_blueprint.static_folder, 'header.gif'), 'rb').read(), 'inline', headers=[['Content-ID','<Myimage>'],])
+
+    msg.html = "<h1>This is an inline image</h1><br><img src='data:image/jpeg;base64,{}' alt='image'>".format(encoded_string)
+    msg.attach(image_file.filename, image_file.content_type, encoded_string)
+    msg.body = "Input from text box: {}".format(input_text)
     mail.send(msg)
     return render_template("email.html")
 
@@ -154,6 +163,7 @@ def post():
     command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email) VALUES(" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") +  "\")"
     cur.execute(command)
     mysql.connection.commit()
+    cur.close()
     return render_template("index.html")
 
 @app.route("/success", methods = ['POST'])
@@ -313,7 +323,7 @@ def success():
         os.remove(path1)
         os.remove(path2)
         os.remove(path3)
-
+        cur.close()
         return render_template("analytics.html")
 
 if __name__ == "__main__":
