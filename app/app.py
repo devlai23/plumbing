@@ -92,18 +92,18 @@ def out():
 def email():
     return render_template("email.html") 
 
-@app.route("/email.html", methods=['POST'])
+# @app.route("/email.html", methods=['POST'])
+@app.route("/successemail", methods = ['POST'])
 def send():
-
     input_text = request.form.getlist('email')[0]
 
-    with open("image.jpg", "rb") as image_file:
+    with open("image001.png", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
     msg = Message(
                 'Hello',
                 sender ='mochinutloyalty@gmail.com',
-                recipients = ['danhog23@bergen.org']
+                recipients = ['devlai23@bergen.org']
                )
 
     msg.html = "<h1>This is an inline image</h1><br><img src='data:image/jpeg;base64,{}' alt='image'>".format(encoded_string)
@@ -111,6 +111,10 @@ def send():
     msg.body = "Input from text box: {}".format(input_text)
     mail.send(msg)
     return render_template("email.html")
+
+
+
+    
 
 @app.route("/analytics.html")
 def analytics():
