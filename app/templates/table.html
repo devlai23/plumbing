@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/analytics.css') }}">
+    <link rel="stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/table.css') }}">
 
 
     <title>Table</title>
@@ -45,13 +45,13 @@
                     <td class = "c3">{{data.Reg_Date}}</td>
                     <td class = "c4">{{data.Customer_Bday}}</td>
                     <td class = "c5">{{data.Customer_Email}}</td>
-                    <td class = "c4">{{data.Bonus}}</td>
-                    <td class = "c4">{{data.Bonus_Used}}</td>
-                    <td class = "c4">{{data.Sales_Total}}</td>
-                    <td class = "c4">{{data.Discount_Total}}</td>
-                    <td class = "c4">{{data.Discount_Ratio}}</td>
-                    <td class = "c4">{{data.Rank}}</td>
-                    <td class = "c4">{{data.Visit_Count}}</td>
+                    <td class = "c6">{{data.Bonus}}</td>
+                    <td class = "c7">{{data.Bonus_Used}}</td>
+                    <td class = "c8">{{data.Sales_Total}}</td>
+                    <td class = "c9">{{data.Discount_Total}}</td>
+                    <td class = "c10">{{data.Discount_Ratio}}</td>
+                    <td class = "c11">{{data.Rank}}</td>
+                    <td class = "c12">{{data.Visit_Count}}</td>
                 </tr>
                 {% endfor %}
             </tbody>

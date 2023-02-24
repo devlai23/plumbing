@@ -12,6 +12,7 @@ import xlrd
 from xlutils.copy import copy
 import sys
 import re
+from jinja2 import Environment, FileSystemLoader
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -108,10 +109,8 @@ def analytics():
 
 @app.route("/table.html")
 def table():
-    return render_template("table.html")
-
-@app.route("/table.html")
-def transferData():
+    environment = Environment(loader=FileSystemLoader("app/templates/"))
+    template = environment.get_template("table.html")
     cur = mysql.connection.cursor()
     mochidata = []
     query = "SELECT * FROM Customer"
@@ -120,8 +119,21 @@ def transferData():
         mochidata.append(i)
     cur.close()
 
-    template.render(mochidata = mochidata)
+    template.render(mochidata=mochidata)
     return render_template("table.html")
+
+#@app.route("/table.html")
+#def transferData():
+    #cur = mysql.connection.cursor()
+    #mochidata = []
+    #query = "SELECT * FROM Customer"
+    #cur.execute(query)
+    #for i in cur.fetchall():
+    #    mochidata.append(i)
+    #print(mochidata)
+    #cur.close()
+
+    #return render_template(mochidata = mochidata)
 
 
 @app.route("/", methods=['POST'])

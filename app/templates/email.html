@@ -39,6 +39,17 @@
                 <button type="submit" id="submitbtn"> Submit! </button>
             </form>
         </div>
+
+        <form action = "/success" method = "post" enctype = "multipart/form-data">
+            <input type = "file" name = "file" multiple/>
+            <input type = "submit" value="Upload" />
+        </form>
+
+        <input type="radio" id="all" name="sending" value="all">
+        <label for="all">Send to All Rewards Members</label><br>
+        <input type="radio" id="manual" name="sending" value="manual" onclick="showtext">
+        <label for="manual">Send Manually</label><br>
+        <input type="text" id="customer-emails" name="customer-emails">
     </div>
 
 </body>
