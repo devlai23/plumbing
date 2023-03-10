@@ -167,6 +167,22 @@ def send():
 def analytics():
     return render_template("analytics.html") 
 
+
+@app.route("/analytics.html", methods=['POST'])
+def refresh():
+    if 'mybutton' in request.form:
+        # now need to run code to find top 5 popular products
+
+        cur = mysql.connection.cursor()
+        query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
+        cur.execute(query)
+        rows = cur.fetchall()
+        popular_items = []
+        for row in rows:
+            popular_items.append((row[0], row[1]))
+        # chart_data = [("Matcha Tea", 27), ("Churro ", 20), ("Original Rice Hot Dog", 19), ("Potato Half Rice Hot Dog", 13), ("Matcha Mochinut", 10)]
+        return render_template('analytics.html', chart_data=popular_items) 
+
 @app.route("/table.html")
 def table():
     environment = Environment(loader=FileSystemLoader("app/templates/"))

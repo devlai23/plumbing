@@ -32,6 +32,9 @@
 
     <div class="inside">
         <div class="split left">
+            <form action="/analytics.html" method="post">
+                <input type="submit" name="mybutton" value="Click me">
+            </form>
             <h1 class = "top-5-head">Top 5 most POPULAR products:</h1>
             <div class = "top-5-products" id = "top-5-products"></div>        
         </div>
@@ -101,21 +104,21 @@
 
             <a class = "database" href="table.html">Check Out Database of Customers</a>
 
-
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript">
         anychart.onDocumentReady(function() {
-            var data = anychart.data.set([
-            ["Matcha Tea", 24],
-            ["Churro ", 20],
-            ["Original Rice Hot Dog", 19],
-            ["Potato Half Rice Hot Dog", 13],
-            ["Matcha Mochinut", 10]
-            ]); 
+            {% if chart_data %}
+            var chart_data = {{ chart_data|tojson|safe }};
 
-            // create the chart
+            const items = [];
+            for (const [label, value] of chart_data){
+                items.push({x: label, value: value});
+            }
+
+            var data = anychart.data.set(items);
+
             var chart = anychart.pie(data); 
 
             chart.container('top-5-products'); 
@@ -160,7 +163,8 @@
             });
 
             chart.draw(); 
-             
+            {% endif %}
+
         });  
     </script>
 
