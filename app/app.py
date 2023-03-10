@@ -171,8 +171,6 @@ def analytics():
 @app.route("/analytics.html", methods=['POST'])
 def refresh():
     if 'mybutton' in request.form:
-        # now need to run code to find top 5 popular products
-
         cur = mysql.connection.cursor()
         query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
         cur.execute(query)
@@ -180,7 +178,6 @@ def refresh():
         popular_items = []
         for row in rows:
             popular_items.append((row[0], row[1]))
-        # chart_data = [("Matcha Tea", 27), ("Churro ", 20), ("Original Rice Hot Dog", 19), ("Potato Half Rice Hot Dog", 13), ("Matcha Mochinut", 10)]
         return render_template('analytics.html', chart_data=popular_items) 
 
 @app.route("/table.html")
@@ -197,20 +194,6 @@ def table():
 
     template.render(mochidata=mochidata)
     return render_template("table.html")
-
-#@app.route("/table.html")
-#def transferData():
-    #cur = mysql.connection.cursor()
-    #mochidata = []
-    #query = "SELECT * FROM Customer"
-    #cur.execute(query)
-    #for i in cur.fetchall():
-    #    mochidata.append(i)
-    #print(mochidata)
-    #cur.close()
-
-    #return render_template(mochidata = mochidata)
-
 
 @app.route("/", methods=['POST'])
 def log():
@@ -254,8 +237,6 @@ def success():
         path1 = ""
         path2 = ""
         path3 = ""
-        path4 = ""
-
 
         # SEARCH FOR NEW MEMBERS
         cshPath = ""
@@ -379,13 +360,6 @@ def success():
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
                     cur.execute(query)
                     mysql.connection.commit()
-                #update Customer set Customer_Name = "Test_User" where Customer_ID = 9999999999
-
-
-        
-
-
-
 
         os.remove(path1)
         os.remove(path2)
