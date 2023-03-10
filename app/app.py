@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
+from io import BytesIO
 from authlib.integrations.flask_client import OAuth
 from urllib.parse import quote_plus, urlencode
 import Order
@@ -19,6 +20,8 @@ ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 mail = Mail(app)
@@ -92,26 +95,41 @@ def out():
 def email():
     return render_template("email.html") 
 
-# @app.route("/email.html", methods=['POST'])
-@app.route("/successemail", methods = ['POST'])
+@app.route("/send-manually", methods=['GET', 'POST'])
 def send():
-    input_text = request.form.getlist('email')[0]
+    send_type = request.form['send-option']
+    print("send_type:", send_type)
 
-    with open("image001.png", "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    if send_type != 'send-manually':
+        # return redirect(url_for('upload'))
+        return "bad"
+    email = request.form.get('email')
 
-    msg = Message(
-                'Hello',
-                sender ='mochinutloyalty@gmail.com',
-                recipients = ['devlai23@bergen.org']
-               )
+    image = request.files['file']
+    text = request.form['textbox']
 
-    msg.html = "<h1>This is an inline image</h1><br><img src='data:image/jpeg;base64,{}' alt='image'>".format(encoded_string)
-    msg.attach(image_file.filename, image_file.content_type, encoded_string)
-    msg.body = "Input from text box: {}".format(input_text)
+    image_folder = os.path.join(APP_ROOT, 'images')
+    image_path = os.path.join(image_folder, image.filename)
+    image.save(image_path)
+
+    with open(image_path, 'rb') as f:
+        image_data = f.read()
+
+    encoded_image = base64.b64encode(image_data).decode('utf-8')
+    print("EMAIL: ",email)
+    msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=[email])
+    with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+        email_template = f.read()
+
+    # attach the image to the email
+    with app.open_resource(image_path) as fp:
+        msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+    # set the HTML content with a reference to the attached image
+    msg.html = email_template.format(image_cid='image', text=text)
     mail.send(msg)
-    return render_template("email.html")
 
+    return "Email sent with the image!"
 
 
     
