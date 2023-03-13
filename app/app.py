@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
+from io import BytesIO
 from authlib.integrations.flask_client import OAuth
 from urllib.parse import quote_plus, urlencode
 import Order
@@ -19,6 +20,8 @@ ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 mail = Mail(app)
@@ -92,29 +95,90 @@ def out():
 def email():
     return render_template("email.html") 
 
-@app.route("/email.html", methods=['POST'])
+@app.route("/send-manually", methods=['GET', 'POST'])
 def send():
+    send_type = request.form.get('send-option')
+    print("send_type:", send_type)
 
-    input_text = request.form.getlist('email')[0]
+    # if code can be streamlined
+    if send_type == 'send-manually':
+        email = request.form['manual_emails']
+        emailArr = email.split()
+        image = request.files['file']
+        text = request.form['textbox']
 
-    with open("image.jpg", "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        image_folder = os.path.join(APP_ROOT, 'images')
+        image_path = os.path.join(image_folder, image.filename)
+        image.save(image_path)
 
-    msg = Message(
-                'Hello',
-                sender ='mochinutloyalty@gmail.com',
-                recipients = ['danhog23@bergen.org']
-               )
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
 
-    msg.html = "<h1>This is an inline image</h1><br><img src='data:image/jpeg;base64,{}' alt='image'>".format(encoded_string)
-    msg.attach(image_file.filename, image_file.content_type, encoded_string)
-    msg.body = "Input from text box: {}".format(input_text)
-    mail.send(msg)
-    return render_template("email.html")
+        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+            email_template = f.read()
+
+        # attach the image to the email
+        with app.open_resource(image_path) as fp:
+            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+        # set the HTML content with a reference to the attached image
+        msg.html = email_template.format(image_cid='image', text=text)
+        mail.send(msg)
+
+        return "Email sent with the image!"
+    
+    elif send_type == 'send-all':
+        #RUN QUERY TO GET ARRAY WITH ALL EMAIL ADDRESSES
+        emailArr = QUERY
+
+        image = request.files['file']
+        text = request.form['textbox']
+
+        image_folder = os.path.join(APP_ROOT, 'images')
+        image_path = os.path.join(image_folder, image.filename)
+        image.save(image_path)
+
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
+
+        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+            email_template = f.read()
+
+        # attach the image to the email
+        with app.open_resource(image_path) as fp:
+            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+        # set the HTML content with a reference to the attached image
+        msg.html = email_template.format(image_cid='image', text=text)
+        mail.send(msg)
+
+        return "Email sent with the image!"
+
+    else:
+        return "bad"
+
+    
 
 @app.route("/analytics.html")
 def analytics():
     return render_template("analytics.html") 
+
+
+@app.route("/analytics.html", methods=['POST'])
+def refresh():
+    if 'mybutton' in request.form:
+        cur = mysql.connection.cursor()
+        query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
+        cur.execute(query)
+        rows = cur.fetchall()
+        popular_items = []
+        for row in rows:
+            popular_items.append((row[0], row[1]))
+        return render_template('analytics.html', chart_data=popular_items) 
 
 @app.route("/table.html")
 def table():
@@ -129,20 +193,6 @@ def table():
     cur.close()
 
     return render_template("table.html", mochidata = mochidata)
-
-#@app.route("/table.html")
-#def transferData():
-    #cur = mysql.connection.cursor()
-    #mochidata = []
-    #query = "SELECT * FROM Customer"
-    #cur.execute(query)
-    #for i in cur.fetchall():
-    #    mochidata.append(i)
-    #print(mochidata)
-    #cur.close()
-
-    #return render_template(mochidata = mochidata)
-
 
 @app.route("/", methods=['POST'])
 def log():
@@ -186,8 +236,6 @@ def success():
         path1 = ""
         path2 = ""
         path3 = ""
-        path4 = ""
-
 
         # SEARCH FOR NEW MEMBERS
         cshPath = ""
@@ -311,13 +359,6 @@ def success():
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
                     cur.execute(query)
                     mysql.connection.commit()
-                #update Customer set Customer_Name = "Test_User" where Customer_ID = 9999999999
-
-
-        
-
-
-
 
         os.remove(path1)
         os.remove(path2)
