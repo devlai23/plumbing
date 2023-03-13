@@ -33,7 +33,7 @@ app.secret_key = env.get("APP_SECRET_KEY")
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'mochinutloyalty@gmail.com'
-app.config['MAIL_PASSWORD'] = 'smbjiqfaqlbwwzpr'
+app.config['MAIL_PASSWORD'] = 'smbjiqfaqlbwwzpr' 
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -128,8 +128,7 @@ def table():
         mochidata.append(i)
     cur.close()
 
-    template.render(mochidata=mochidata)
-    return render_template("table.html")
+    return render_template("table.html", mochidata = mochidata)
 
 #@app.route("/table.html")
 #def transferData():

@@ -1,4 +1,4 @@
-{# templates/analytics.html #}
+{# app/templates/analytics.html #}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -40,18 +40,18 @@
             <tbody>
                 {% for data in mochidata %}
                 <tr>
-                    <td class = "c1">{{data.Customer_ID}}</td>
-                    <td class = "c2">{{data.Customer_Name}}</td>
-                    <td class = "c3">{{data.Reg_Date}}</td>
-                    <td class = "c4">{{data.Customer_Bday}}</td>
-                    <td class = "c5">{{data.Customer_Email}}</td>
-                    <td class = "c6">{{data.Bonus}}</td>
-                    <td class = "c7">{{data.Bonus_Used}}</td>
-                    <td class = "c8">{{data.Sales_Total}}</td>
-                    <td class = "c9">{{data.Discount_Total}}</td>
-                    <td class = "c10">{{data.Discount_Ratio}}</td>
-                    <td class = "c11">{{data.Rank}}</td>
-                    <td class = "c12">{{data.Visit_Count}}</td>
+                    <td class = "c1">{{ data.Customer_ID }}</td>
+                    <td class = "c2">{{ data.Customer_Name }}</td>
+                    <td class = "c3">{{ data.Reg_Date }}</td>
+                    <td class = "c4">{{ data.Customer_Bday }}</td>
+                    <td class = "c5">{{ data.Customer_Email }}</td>
+                    <td class = "c6">{{ data.Bonus }}</td>
+                    <td class = "c7">{{ data.Bonus_Used }}</td>
+                    <td class = "c8">{{ data.Sales_Total }}</td>
+                    <td class = "c9">{{ data.Discount_Total }}</td>
+                    <td class = "c10">{{ data.Discount_Ratio }}</td>
+                    <td class = "c11">{{ data.Rank }}</td> 
+                    <td class = "c12">{{ data.Visit_Count }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
