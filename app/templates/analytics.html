@@ -17,18 +17,194 @@
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
     <link href="/path/to/dist/jquery-dm-select-show.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+
 </head>
-<body>
-    <div class="navbar">
-        <a class="active" href="index.html">Home</a>
-        <a href="analytics.html">Analytics</a>
-        <a href="email.html">Email</a>
-        <a>Log Out</a>
-    </div>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light background-color">
+        <a class="navbar-brand" href="#">Mochinut</a>
+        <img src = "{{url_for('static', filename='photos/mochinut-logo.png')}}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="analytics.html">View Customer Analytics</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="email.html">Email Your Customers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="logout.html">Logout</a>
+              </li>
+          </ul>
+        </div>
+      </nav>
 
     <div class = "title-section"> 
-        <h1 class = "title">ANALYTICS</h1>
+        <h1 class = "text-center mt-4">Tenafly Mochinut's Customer Analytics</h1>
     </div>
+
+    <div class="card mt-4">
+        <h5 class="card-header">Update the database by uploading new customers</h5>
+        <div class="card-body">
+            <form action = "/success" method = "post" enctype = "multipart/form-data">
+                <div class="form-group">
+                    <input type = "file" name = "file" multiple/>
+                    <input type = "submit" value="Upload" />        
+                </div>
+            </form>
+            <a class = "database mr-4 mt-3 btn btn-outline-info" href="table.html">Check Out Complete Database of Customers</a>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <h5 class="card-header">Top 5 most POPULAR products:</h5>
+        <div class="card-body">
+            <form action="/analytics.html" method="post">
+                <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Refresh Data</button>
+                <!--<input type="submit" name="mybutton" value="Click me"> -->
+            </form>
+            <div class = "top-5-products" id = "top-5-products"></div>  
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <h5 class="card-header">TOP Buyers This Week For:</h5>
+        <select id="top-buyers">
+            <option value="unselected">Unselected</option>
+            <option value="hot-dog">Hot Dog</option>
+            <option value="bubble-tea">Bubble Tea</option>
+            <option value="mochinut">Mochinut</option>
+            <option value="spicy-rice-cakes">Spicy Rice Cakes</option>
+        </select>
+        <div class="card-body">
+            <div class="content">
+                <div id ="unselected" class="data">
+                    <h4>Choose a Category to See Analytics</h4>
+                </div>
+                <div id ="hot-dog" class="data">
+                    <ol>
+                        <li>Harry Potter</li>
+                        <li>Draco Malfoy</li>
+                        <li>Hermione Granger</li>
+                        <li>Ron Weasley</li>
+                        <li>Severus Snape</li>
+                    </ol>
+                </div>
+                <div id ="bubble-tea" class="data">
+                    <ol>
+                        <li>Percy Jackson</li>
+                        <li>Annabeth Chase</li>
+                        <li>Thalia Grace</li>
+                        <li>Nico di Angelo</li>
+                        <li>Luke Castellan</li>
+                    </ol>
+                </div>
+                <div id ="mochinut" class="data">
+                    <ol>
+                        <li>Padme Amidala</li>
+                        <li>Anakin Skywalker</li>
+                        <li>ObiWan Kenobi</li>
+                        <li>Boba Fett</li>
+                        <li>Han Solo</li>
+                    </ol>
+                </div>
+                <div id ="spicy-rice-cakes" class="data">
+                    <ol>
+                        <li>Nathasha Romanoff</li>
+                        <li>Steve Rogers</li>
+                        <li>Tony Stark</li>
+                        <li>Thor Odinson</li>
+                        <li>Wanda Maximoff</li>
+                    </ol>
+                </div>
+            </div> 
+        </div>
+      </div>
+    
+    <script type="text/javascript">
+        anychart.onDocumentReady(function() {
+            {% if chart_data %}
+            var chart_data = {{ chart_data|tojson|safe }};
+
+            const items = [];
+            for (const [label, value] of chart_data){
+                items.push({x: label, value: value});
+            }
+
+            var data = anychart.data.set(items);
+
+            var chart = anychart.pie(data); 
+
+            chart.container('top-5-products'); 
+
+            chart
+                .innerRadius('65%')
+                .explode(25)
+
+            var label = anychart.standalones.label(); 
+            label
+                .enabled(true)
+                .text('Top 5 most POPULAR products')
+                .width('100%')
+                .height('100%')
+                .adjustFontSize(true, true)
+                .minFontSize(20)
+                .maxFontSize(30)
+                .fontColor('darkolivegreen')
+                .position('center')
+                .anchor('center')
+                .hAlign('center')
+                .vAlign('middle'); 
+
+            chart.center().content(label); 
+
+            chart.hovered().fill('darkolivegreen'); 
+            chart.selected().fill('olive'); 
+
+            chart
+                .hovered()
+                .outline()
+                .fill(function() {
+                    return anychart.color.lighten('darkolivegreen', 0.55);
+                }); 
+
+            chart
+                .selected()
+                .outline()
+                .offset(5)
+                .fill(function () {
+                return anychart.color.lighten('olive', 0.25);
+            });
+
+            chart.draw(); 
+            {% endif %}
+
+        });  
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#top-buyers").on('change', function() {
+                $(".data").hide(); 
+                $("#" + $(this).val()).fadeIn(700); 
+            }).change(); 
+        }); 
+    </script>
+
+    <!--
+
 
     <div class="inside">
         <div class="split left">
@@ -107,7 +283,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
         anychart.onDocumentReady(function() {
             {% if chart_data %}
             var chart_data = {{ chart_data|tojson|safe }};
@@ -177,6 +353,7 @@
         }); 
     </script>
 
+-->
 
 </body>
 </html>

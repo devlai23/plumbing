@@ -1,3 +1,16 @@
+.background-color {
+    background-color: #fbe3e8; 
+}
+
+
+.title {
+    position:relative;
+    top:50px;
+    text-align:center;
+}
+
+/*
+
 body {
     background-color:rgb(250, 245, 239);
     color: black; 
@@ -11,6 +24,7 @@ body {
     height:100%; 
     overflow:scroll; 
 }
+
 
 .navbar {
     background-color: olive; 
