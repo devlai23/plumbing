@@ -206,9 +206,8 @@ def post():
     check = "SELECT IF(" + text.get("pnumber") + " in (SELECT Customer_ID from Customer), 1, 0)"
     cur.execute(check)
     rv = str(cur.fetchall())
-
     if rv[2] == '1':
-        return render_template("index.html")
+        return "Phone number already exists"
     command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email) VALUES(" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") +  "\")"
     cur.execute(command)
     mysql.connection.commit()
