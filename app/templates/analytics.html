@@ -26,7 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
 
 </head>
-<body class="bg-light">
+<body class="bg-white">
     <nav class="navbar navbar-expand-lg navbar-light background-color">
         <a class="navbar-brand" href="#">Mochinut</a>
         <img src = "{{url_for('static', filename='photos/mochinut-logo.png')}}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
@@ -52,35 +52,37 @@
       </nav>
 
     <div class = "title-section"> 
-        <h1 class = "text-center mt-4">Tenafly Mochinut's Customer Analytics</h1>
+        <h1 class = "text-center mt-4">Tenafly Mochinut's Customer Analytics <img src = "{{url_for('static', filename='photos/analytics.png')}}" alt="icon" width="50" height="50" class="d-inline-block align-text-top"></h1>
     </div>
 
-    <div class="card mt-4">
+    <div class="card mt-4 mx-auto" style="width: 50rem;">
         <h5 class="card-header">Update the database by uploading new customers</h5>
         <div class="card-body">
             <form action = "/success" method = "post" enctype = "multipart/form-data">
                 <div class="form-group">
-                    <input type = "file" name = "file" multiple/>
-                    <input type = "submit" value="Upload" />        
+                    <div class="btn-group mb-3">
+                        <input class="form-control" type="file" name="file" id="formFile" style="width: 30rem;" multiple>
+                        <input type="submit" value="Upload" class = "database btn btn-outline-primary"></a>
+                      </div>
                 </div>
             </form>
-            <a class = "database mr-4 mt-3 btn btn-outline-info" href="table.html">Check Out Complete Database of Customers</a>
+            <a class = "database mr-4 btn btn-info" href="table.html">Check Out Complete Database of Customers</a>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <h5 class="card-header">Top 5 most POPULAR products:</h5>
+    <div class="card mt-4  mx-auto" style="width: 50rem;">
+        <h5 class="card-header">Top 5 most POPULAR products at Mochinut Tenafly:</h5>
         <div class="card-body">
             <form action="/analytics.html" method="post">
-                <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Refresh Data</button>
+                <button type="submit" class="btn btn-outline-info text-right" name = "mybutton">Refresh Data</button>
                 <!--<input type="submit" name="mybutton" value="Click me"> -->
             </form>
             <div class = "top-5-products" id = "top-5-products"></div>  
         </div>
       </div>
 
-      <div class="card mt-4">
-        <h5 class="card-header">TOP Buyers This Week For:</h5>
+      <div class="card mt-4 mx-auto mb-4" style="width: 50rem;">
+        <h5 class="card-header">TOP Buyers at Mochinut Tenafly This Week For:</h5>
         <select id="top-buyers">
             <option value="unselected">Unselected</option>
             <option value="hot-dog">Hot Dog</option>

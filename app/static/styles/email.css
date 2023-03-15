@@ -2,6 +2,11 @@
     background-color: #fbe3e8; 
 }
 
+.card-header {
+    background-color: #ebf6f5!important; 
+    color: #5cbdb9;
+}
+
 .title {
     position:relative;
     top:50px;
