@@ -216,6 +216,7 @@ def post():
 
 @app.route("/success", methods = ['POST'])
 def success():  
+    # needs bonus mileage, customer history, customer sales history
     if request.method == 'POST':  
         files = request.files.getlist("file")
         for file in files:
@@ -245,6 +246,7 @@ def success():
                 break
         book = xlrd.open_workbook(cshPath)
         bookSheet = book.sheet_by_index(0)
+        count = 0
         for row in range(2, bookSheet.nrows):
             value = re.sub("\\D+", "", str(bookSheet.cell(row, 11).value))
             if value != "": 
@@ -269,6 +271,8 @@ def success():
                     query = "INSERT INTO Customer VALUES(" + Customer_ID + ", \"" + Customer_Name + "\" , \"" + Reg_Date + "\" , \"" + Customer_Bday + "\" , \"" + Customer_Email + "\" , \"" + Bonus + "\" , \"" + Bonus_Used + "\" , \"" + Sales_Total + "\" , \"" + Discount_Total + "\" , \"" + Discount_Ratio + "\" ," + Rank + " ," + Visit_Count + " , \"" + Last_Visit_Date + "\")"
                     cur.execute(query)
                     mysql.connection.commit()
+                    count+=1
+        print("TESTFLOW:", str(count), "new members were successfully added to the database")
 
 
         # SEARCH FOR NEW ORDERS
@@ -293,10 +297,11 @@ def success():
             if newValue != "" and int(newValue) > lastPos:
                 order = Order.Order(int(newValue), bookSheet.cell(row, 1).value, bookSheet.cell(row, 2).value)
                 newOrders.append(order)
-
+        print("TESTFLOW:", str(len(newOrders)), "new orders were found")
 
         # LINK ALL NEW ORDERS TO A CUSTOMER ID
         cshPath = ""
+        count = 0
         for file in os.listdir(ROOT_DIR):
             if (file[0:10] == "Customer H"):
                 cshPath = file
@@ -315,8 +320,11 @@ def success():
                     # then this neworder was by a loyalty member. this order must be entered to database
                         newCustomerID = int(re.sub("\\D+", "", customerID))
                         order.setCustomerID(newCustomerID)
+                        count += 1
+        print("TESTFLOW:", count, "CustomerID's were linked to new orders")
 
         # ADDING NEW ORDERS INTO THE DATABASE
+        count = 0
         for order in newOrders:
             if order.customerID != -1:
                 cur.execute("select if("+ str(order.customerID) +" in (select Customer_ID from Customer), 1, 0)")
@@ -324,6 +332,8 @@ def success():
                 if exists[2] == "1":
                     cur.execute(order.insertQuery())
                     mysql.connection.commit()
+                    count +=1
+        print("TESTFLOW:", count, "orders were successfully added to the database")
 
         #Update all existing customer fields (Bonus, Bonus used, Sales total, etc. )
         book = xlrd.open_workbook(path3)
@@ -358,6 +368,7 @@ def success():
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
                     cur.execute(query)
                     mysql.connection.commit()
+        print("Other fields for all customers have been updated")
 
         os.remove(path1)
         os.remove(path2)
