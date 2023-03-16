@@ -265,12 +265,8 @@ def post():
     return render_template("index.html")
 
 @app.route("/success", methods = ['POST'])
-<<<<<<< Updated upstream
 def success():  
     # needs bonus mileage, customer history, customer sales history
-=======
-def success():
->>>>>>> Stashed changes
     if request.method == 'POST':  
         files = request.files.getlist("file")
         for file in files:
