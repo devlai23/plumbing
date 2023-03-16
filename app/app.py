@@ -239,7 +239,6 @@ def new_page():
     message = ""
     for inner_tuple in data:
         message += str(inner_tuple[:5])
-    print(message)
     return render_template('latest.html', message=message)
 
 @app.route("/", methods=['POST'])

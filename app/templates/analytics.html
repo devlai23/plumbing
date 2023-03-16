@@ -56,7 +56,7 @@
     </div>
 
     <div class="card mt-4 mx-auto" style="width: 50rem;">
-        <h5 class="card-header">Update the database by uploading new customers</h5>
+        <h5 class="card-header">Update the cloud database</h5>
         <div class="card-body">
             <form action = "/success" method = "post" enctype = "multipart/form-data">
                 <div class="form-group">
@@ -82,18 +82,7 @@
         </div>
       </div>
 
-<<<<<<< Updated upstream
-      <div class="card mt-4 mx-auto mb-4" style="width: 50rem;">
-        <h5 class="card-header">TOP Buyers at Mochinut Tenafly This Week For:</h5>
-        <select id="top-buyers">
-            <option value="unselected">Unselected</option>
-            <option value="hot-dog">Hot Dog</option>
-            <option value="bubble-tea">Bubble Tea</option>
-            <option value="mochinut">Mochinut</option>
-            <option value="spicy-rice-cakes">Spicy Rice Cakes</option>
-        </select>
-=======
-    <div class="card mt-4">
+    <div class="card mt-4 mx-auto" style="width: 50rem;">
         <h5 class="card-header">TOP Buyers This Week For:</h5>
         <form action= "/analytics.html" method="post">
             <select id="top-buyers" name="selected">
@@ -103,16 +92,15 @@
                 <option value="mochinut" {% if selected == 'mochinut' %}selected{% endif %}>Mochinut</option>
                 <option value="spicy-rice-cakes" {% if selected == 'spicy-rice-cakes' %}selected{% endif %}>Spicy Rice Cakes</option>
             </select>
-            <button type="submit" name="buyerButton">Submit</button>
+            <button type="submit" class="btn btn-outline-info text-right ml-2 mt-2" name="buyerButton">Submit</button>
         </form>
 
->>>>>>> Stashed changes
         <div class="card-body">
             <div class="content">
                 <div id ="unselected" class="data">
                     <h4>Choose a Category to See Analytics</h4>
                 </div>
-                <div id ="hot-dog" class="data">
+                <!-- <div id ="hot-dog" class="data">
                     <ol>
                         <li>Harry Potter</li>
                         <li>Draco Malfoy</li>
@@ -120,7 +108,7 @@
                         <li>Ron Weasley</li>
                         <li>Severus Snape</li>
                     </ol>
-                </div>
+                </div> -->
                 <div id ="bubble-tea" class="data">
                     <ol>
                         {% for item in top_buyersMilkTea %}
@@ -135,7 +123,7 @@
                         {% endfor %}
                     </ol>
                 </div>
-                <div id ="spicy-rice-cakes" class="data">
+                <!-- <div id ="spicy-rice-cakes" class="data">
                     <ol>
                         <li>Nathasha Romanoff</li>
                         <li>Steve Rogers</li>
@@ -143,7 +131,7 @@
                         <li>Thor Odinson</li>
                         <li>Wanda Maximoff</li>
                     </ol>
-                </div>
+                </div> -->
             </div> 
         </div>
       </div>
