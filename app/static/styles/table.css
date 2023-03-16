@@ -1,4 +1,23 @@
-body {
+.title {
+    position:relative;
+    top:50px;
+    text-align:center;
+}
+
+.table-container {
+    margin-top: 100px; 
+}
+
+.background-color {
+    background-color: #fbe3e8; 
+}
+
+td, th {
+    font-size: 9px; 
+}
+
+
+/*body {
     background-color:rgb(250, 245, 239);
     color: black; 
     font-family: 'Montserrat', sans-serif;

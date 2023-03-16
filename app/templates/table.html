@@ -12,102 +12,97 @@
 
     <title>Table</title>
 
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-    <link href="/path/to/dist/jquery-dm-select-show.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Datatables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- AnyChart -->
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+
+<!-- Other libraries -->
+<link href="/path/to/dist/jquery-dm-select-show.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
-<body>
-    <div class="table-container">
-        <table class="data-table">
+<body class="bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light background-color">
+        <a class="navbar-brand" href="#">Mochinut</a>
+        <img src = "{{url_for('static', filename='photos/mochinut-logo.png')}}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="analytics.html">View Customer Analytics</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="email.html">Email Your Customers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="logout.html">Logout</a>
+              </li>
+          </ul>
+        </div>
+      </nav>
+      
+    <div class = "title-section"> 
+        <h1 class = "title">Entire Database of Current Rewards Members</h1>
+    </div>
+
+    <div class="table-container ml-2 mr-2 mb-2">
+        <table class="table table-striped table-bordered w-100" cellspacing="0" id = "data-table">
             <thead>
                 <tr>
-                <th><button id="memberid">Member ID</button></th>
-                <th><button id="name">Customer Name</button></th>
-                <th><button id="reg-date">Reg Date</button></th>
-                <th><button id="birthday">Birthday</button></th>
-                <th><button id="email">Email</button></th>
-                <th><button id="bonus">Bonus</button></th>
-                <th><button id="bonus_used">Bonus Used</button></th>
-                <th><button id="total_sales">Sales Total</button></th>
-                <th><button id="discount_total">Discount Total</button></th>
-                <th><button id="discount_ratio">Discount Ratio</button></th>
-                <th><button id="rank">Rank</button></th>
-                <th><button id="visit_count">Visit Count</button></th>
+                <th class="th-sm">Member ID</th>
+                <th class="th-sm">Customer Name</th>
+                <th class="th-sm">Reg Date</th>
+                <th class="th-sm">Birthday</th>
+                <th class="th-sm">Email</th>
+                <th class="th-sm"></th>
+                <th class="th-sm">Bonus Used</th>
+                <th class="th-sm">Sales Total</th>
+                <th class="th-sm">Discount Total</th>
+                <th class="th-sm">Discount Ratio</th>
+                <th class="th-sm">Rank</th>
+                <th class="th-sm">Visit Count</th>
                 </tr>
             </thead>
             <tbody>
                 {% for data in mochidata %}
                 <tr>
-                    <td class = "c1">{{ data.Customer_ID }}</td>
-                    <td class = "c2">{{ data.Customer_Name }}</td>
-                    <td class = "c3">{{ data.Reg_Date }}</td>
-                    <td class = "c4">{{ data.Customer_Bday }}</td>
-                    <td class = "c5">{{ data.Customer_Email }}</td>
-                    <td class = "c6">{{ data.Bonus }}</td>
-                    <td class = "c7">{{ data.Bonus_Used }}</td>
-                    <td class = "c8">{{ data.Sales_Total }}</td>
-                    <td class = "c9">{{ data.Discount_Total }}</td>
-                    <td class = "c10">{{ data.Discount_Ratio }}</td>
-                    <td class = "c11">{{ data.Rank }}</td> 
-                    <td class = "c12">{{ data.Visit_Count }}</td>
+                    <td class = "c1">{{ data[0] }}</td>
+                    <td class = "c2">{{ data[1] }}</td>
+                    <td class = "c3">{{ data[2] }}</td>
+                    <td class = "c4">{{ data[3] }}</td>
+                    <td class = "c5">{{ data[4] }}</td>
+                    <td class = "c6">{{ data[5] }}</td>
+                    <td class = "c7">{{ data[6] }}</td>
+                    <td class = "c8">{{ data[7]}}</td>
+                    <td class = "c9">{{ data[8] }}</td>
+                    <td class = "c10">{{ data[9] }}</td>
+                    <td class = "c11">{{ data[10] }}</td> 
+                    <td class = "c12">{{ data[11] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <script>
-        const sortData = (data, param, direction = "asc") => {
-        tableContent.innerHTML = '';
-        const sortedData =
-            direction == "asc"
-            ? [...data].sort(function (a, b) {
-                if (a[param] < b[param]) {
-                    return -1;
-                }
-                if (a[param] > b[param]) {
-                    return 1;
-                }
-                return 0;
-                })
-            : [...data].sort(function (a, b) {
-                if (b[param] < a[param]) {
-                    return -1;
-                }
-                if (b[param] > a[param]) {
-                    return 1;
-                }
-                return 0;
-                });
-
-        getTableContent(sortedData);
-        };
-
-        const resetButtons = (event) => {
-        [...tableButtons].map((button) => {
-            if (button !== event.target) {
-            button.removeAttribute("data-dir");
-            }
-        });
-        };
-
-        window.addEventListener("load", () => {
-        getTableContent(response.mochidata);
-
-        [...tableButtons].map((button) => {
-            button.addEventListener("click", (e) => {
-            resetButtons(e);
-            if (e.target.getAttribute("data-dir") == "desc") {
-                sortData(response.mochidata, e.target.id, "desc");
-                e.target.setAttribute("data-dir", "asc");
-            } else {
-                sortData(response.mochidata, e.target.id, "asc");
-                e.target.setAttribute("data-dir", "desc");
-            }
-            });
-        });
+    <script type="module" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="module" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        $('#data-table').DataTable();
         });
     </script>
 

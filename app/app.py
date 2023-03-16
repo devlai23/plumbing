@@ -183,17 +183,17 @@ def refresh():
 
 @app.route("/table.html")
 def table():
-    environment = Environment(loader=FileSystemLoader("app/templates/"))
-    template = environment.get_template("table.html")
+    # environment = Environment(loader=FileSystemLoader("app/templates/"))
+    #template = environment.get_template("table.html")
     cur = mysql.connection.cursor()
     mochidata = []
     query = "SELECT * FROM Customer"
     cur.execute(query)
-    for i in cur.fetchall():
-        mochidata.append(i)
+    for data in cur.fetchall():
+        mochidata.append(data)
     cur.close()
 
-    return render_template("table.html", mochidata = mochidata)
+    return render_template("table.html", mochidata=mochidata)
 
 @app.route('/latest.html')
 def new_page():
