@@ -180,7 +180,32 @@ def refresh():
         for row in rows:
             popular_items.append((row[0], row[1]))
         return render_template('analytics.html', chart_data=popular_items) 
-
+    elif 'buyerButton' in request.form:
+        top_buyers = []
+        top_buyers = request.args.get('top-buyers')
+        top_buyersMilkTea = []
+        selected = request.args.get('selected')
+        cur = mysql.connection.cursor()
+        queryMochi = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"1 MOCHINUT\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
+        cur.execute(queryMochi)
+        queryBubbleTea = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"MILKTEA\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
+        topBuyerRows = cur.fetchall()
+        cur.execute(queryBubbleTea)
+        topBubbleRows = cur.fetchall()
+        if topBuyerRows:
+            top_buyers = [row[1] for row in topBuyerRows]
+        else:
+            top_buyers = []
+        if topBubbleRows:
+            top_buyersMilkTea = [row[1] for row in topBubbleRows]
+        else:
+            top_buyersMilkTea = []
+        return render_template('analytics.html', topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)
+    else:
+        return render_template('analytics.html')  
+#@app.route("/analytics.html", methods=['post'])
+#def getTopBuyers():
+    
 @app.route("/table.html")
 def table():
     # environment = Environment(loader=FileSystemLoader("app/templates/"))
@@ -237,8 +262,12 @@ def post():
     return render_template("index.html")
 
 @app.route("/success", methods = ['POST'])
+<<<<<<< Updated upstream
 def success():  
     # needs bonus mileage, customer history, customer sales history
+=======
+def success():
+>>>>>>> Stashed changes
     if request.method == 'POST':  
         files = request.files.getlist("file")
         for file in files:

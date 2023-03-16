@@ -21,7 +21,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
 
@@ -82,6 +82,7 @@
         </div>
       </div>
 
+<<<<<<< Updated upstream
       <div class="card mt-4 mx-auto mb-4" style="width: 50rem;">
         <h5 class="card-header">TOP Buyers at Mochinut Tenafly This Week For:</h5>
         <select id="top-buyers">
@@ -91,6 +92,21 @@
             <option value="mochinut">Mochinut</option>
             <option value="spicy-rice-cakes">Spicy Rice Cakes</option>
         </select>
+=======
+    <div class="card mt-4">
+        <h5 class="card-header">TOP Buyers This Week For:</h5>
+        <form action= "/analytics.html" method="post">
+            <select id="top-buyers" name="selected">
+                <option value="unselected" {% if selected == 'unselected' %}selected{% endif %}>Choose Category</option>
+                <option value="hot-dog" {% if selected == 'hot-dog' %}selected{% endif %}>Hot Dog</option>
+                <option value="bubble-tea" {% if selected == 'bubble-tea' %}selected{% endif %}>Bubble Tea</option>
+                <option value="mochinut" {% if selected == 'mochinut' %}selected{% endif %}>Mochinut</option>
+                <option value="spicy-rice-cakes" {% if selected == 'spicy-rice-cakes' %}selected{% endif %}>Spicy Rice Cakes</option>
+            </select>
+            <button type="submit" name="buyerButton">Submit</button>
+        </form>
+
+>>>>>>> Stashed changes
         <div class="card-body">
             <div class="content">
                 <div id ="unselected" class="data">
@@ -107,20 +123,16 @@
                 </div>
                 <div id ="bubble-tea" class="data">
                     <ol>
-                        <li>Percy Jackson</li>
-                        <li>Annabeth Chase</li>
-                        <li>Thalia Grace</li>
-                        <li>Nico di Angelo</li>
-                        <li>Luke Castellan</li>
+                        {% for item in top_buyersMilkTea %}
+                            <li>{{item}}</li>
+                        {% endfor %}
                     </ol>
                 </div>
                 <div id ="mochinut" class="data">
                     <ol>
-                        <li>Padme Amidala</li>
-                        <li>Anakin Skywalker</li>
-                        <li>ObiWan Kenobi</li>
-                        <li>Boba Fett</li>
-                        <li>Han Solo</li>
+                        {% for item in topBuyers %}
+                            <li>{{item}}</li>
+                        {% endfor %}
                     </ol>
                 </div>
                 <div id ="spicy-rice-cakes" class="data">
@@ -198,12 +210,14 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+         $(document).ready(function() {
             $("#top-buyers").on('change', function() {
                 $(".data").hide(); 
                 $("#" + $(this).val()).fadeIn(700); 
             }).change(); 
         }); 
+
+
     </script>
 
     <!--
