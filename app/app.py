@@ -128,7 +128,9 @@ def send():
         msg.html = email_template.format(image_cid='image', text=text)
         mail.send(msg)
 
-        return "Email sent with the image!"
+        email_sent = True
+
+        return render_template('email.html', email_sent=email_sent)
     
     elif send_type == 'send-all':
         #RUN QUERY TO GET ARRAY WITH ALL EMAIL ADDRESSES
@@ -156,8 +158,9 @@ def send():
         # set the HTML content with a reference to the attached image
         msg.html = email_template.format(image_cid='image', text=text)
         mail.send(msg)
+        email_sent = True
 
-        return "Email sent with the image!"
+        return render_template('email.html', email_sent=email_sent)
 
     else:
         return "bad"
