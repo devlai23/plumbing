@@ -194,6 +194,25 @@ def table():
 
     return render_template("table.html", mochidata = mochidata)
 
+@app.route('/latest.html')
+def new_page():
+    cur = mysql.connection.cursor()
+    query = """SELECT *
+            FROM Customer
+            WHERE STR_TO_DATE(Reg_Date, '%m/%d/%y %h:%i:%s %p') BETWEEN DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND LAST_DAY(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            UNION
+            SELECT *
+            FROM Customer
+            WHERE STR_TO_DATE(Reg_Date, '%m/%d/%y %h:%i:%s %p') BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01') AND LAST_DAY(NOW());"""
+    cur.execute(query)
+    rv = str(cur.fetchall())
+    data = eval(rv)
+    message = ""
+    for inner_tuple in data:
+        message += str(inner_tuple[:5])
+    print(message)
+    return render_template('latest.html', message=message)
+
 @app.route("/", methods=['POST'])
 def log():
     return render_template("index.html")
