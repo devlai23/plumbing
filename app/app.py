@@ -15,6 +15,7 @@ import sys
 import re
 import base64
 from jinja2 import Environment, FileSystemLoader
+import datetime
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -227,7 +228,9 @@ def post():
     rv = str(cur.fetchall())
     if rv[2] == '1':
         return "Phone number already exists"
-    command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email) VALUES(" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") +  "\")"
+    now = datetime.datetime.now()
+    formatted_date = now.strftime('%m/%d/%y %#I:%M:%S %p')
+    command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email, Reg_Date) VALUES (" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") + "\", " + "\"" + formatted_date + "\"" + ")"
     cur.execute(command)
     mysql.connection.commit()
     cur.close()
