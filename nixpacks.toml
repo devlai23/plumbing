@@ -1,2 +1,2 @@
 [phases.setup]
-aptPkgs = ["...", "libmysqlclient-dev", "mysqlclient", "mysql"]
+aptPkgs = ["...", "libmysqlclient-dev"]
