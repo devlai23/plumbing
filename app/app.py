@@ -162,6 +162,44 @@ def send():
 
         return render_template('email.html', email_sent=email_sent)
 
+    elif send_type == 'send-bdays':
+        #RUN QUERY TO GET ARRAY WITH ALL EMAIL ADDRESSES
+        #cur = mysql.connection.cursor()
+        #query = ""
+        #cur.execute(query)
+        #rows = cur.fetchall()
+        #email_bdays = []
+        #for row in rows:
+            #popular_items.append((row[0], row[1]))
+        #emailArr = QUERY
+
+        #image = request.files['file']
+        #text = request.form['textbox']
+
+        #image_folder = os.path.join(APP_ROOT, 'images')
+        #mage_path = os.path.join(image_folder, image.filename)
+        #image.save(image_path)
+
+        #with open(image_path, 'rb') as f:
+        #    image_data = f.read()
+
+        #encoded_image = base64.b64encode(image_data).decode('utf-8')
+        #msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        #with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+        #    email_template = f.read()
+
+        # attach the image to the email
+        #with app.open_resource(image_path) as fp:
+        #    msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+        # set the HTML content with a reference to the attached image
+        #msg.html = email_template.format(image_cid='image', text=text)
+        #mail.send(msg)
+        email_sent = True
+
+        return render_template('email.html', email_sent=email_sent)
+
+
     else:
         return "bad"
 

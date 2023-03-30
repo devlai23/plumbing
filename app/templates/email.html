@@ -55,12 +55,25 @@
         <div class="card-body">
             <div class="form-check">
                 <form action="{{ url_for('send') }}" method="post" enctype = "multipart/form-data" novalidate>
-                    <input class="form-check-input" type="radio" id="send-all" name="send-option" value="send-all" checked>
-                    <label class="form-check-label" for="send-all">Send to All</label>
-                    <br>
-                    <input class="form-check-input" type="radio" id="send-manually" name="send-option" value="send-manually">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-info">Select Recipient</button>
+                    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Send Manually</a>
+                      <a class="dropdown-item" href="#">Send to Birthdays Coming Up</a>
+                      <a class="dropdown-item" href="#">Send to Top Ranks</a>
+                      <a class="dropdown-item" href="#">Send to All</a>
+                    </div>
+                  </div>
+
+                    <!--<input class="form-check-input" type="radio" id="send-manually" name="send-option" value="send-manually">
                     <label class="form-check-label" for="send-manually">Send Manually</label>
                     <input class="form-control mt-2" type="text" name="manual_emails" placeholder="Enter email addresses separated by spaces"/>
+                    <br>
+                    <input class="form-check-input" type="radio" id="send-all" name="send-option" value="send-all" checked>
+                    <label class="form-check-label" for="send-all">Send to All</label>
                     <br>
                     <div id="manual-emails" style="display:none">
                       <label for="email">Emails You Want to Send to Your Customers (separate with commas)</label>
