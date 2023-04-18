@@ -98,6 +98,22 @@
         </table>
     </div>
 
+    <table class="inputs">
+      <tbody><tr>
+          <td>Minimum rank:</td>
+          <td><input type="text" id="min" name="min"></td>
+      </tr>
+      <tr>
+          <td>Maximum rank:</td>
+          <td><input type="text" id="max" name="max"></td>
+      </tr>
+
+      <tr>
+        <td>Birthday Month:</td>
+        <td><input type="text" id="bday" name="bday"></td>
+      </tr>
+    </tbody></table>
+
     <script type="module" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="module" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
@@ -105,7 +121,45 @@
         $('#data-table').DataTable();
         });
     </script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+          var minEl = $('#min');
+          var maxEl = $('#max');
+          var searchMonthEl = $('#bday');
+      
+          // Custom range filtering function
+          $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+              var min = parseInt(minEl.val(), 10);
+              var max = parseInt(maxEl.val(), 10);
+              var searchMonth = parseInt(searchMonthEl.val(), 10);
+              var age = parseFloat(data[10]) || 0;
 
+              
+              var bdayMonth = parseFloat(data[3]) || 0;
+      
+              if (
+                  (isNaN(min) && isNaN(max)) ||
+                  (isNaN(min) && age <= max) ||
+                  (min <= age && isNaN(max)) ||
+                  (min <= age && age <= max)
+              ) {
+                  return true;
+              }
+      
+              return false;
+          });
+      
+          var table = $('#data-table').DataTable();
+      
+          // Changes to the inputs will trigger a redraw to update the table
+          minEl.on('input', function () {
+              table.draw();
+          });
+          maxEl.on('input', function () {
+              table.draw();
+          });
+      });
+    </script>
 
 </body>
 </html>
