@@ -6,7 +6,7 @@ from os import environ as env
 from io import BytesIO
 from authlib.integrations.flask_client import OAuth
 from urllib.parse import quote_plus, urlencode
-import Order
+#import Order
 import os
 import xlwt
 import xlrd
