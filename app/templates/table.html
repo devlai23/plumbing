@@ -116,6 +116,7 @@
 
     <script type="module" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="module" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
         $('#data-table').DataTable();
@@ -127,21 +128,29 @@
           var maxEl = $('#max');
           var searchMonthEl = $('#bday');
       
-          // Custom range filtering function
           $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
               var min = parseInt(minEl.val(), 10);
               var max = parseInt(maxEl.val(), 10);
-              var searchMonth = parseInt(searchMonthEl.val(), 10);
               var age = parseFloat(data[10]) || 0;
 
-              
-              var bdayMonth = parseFloat(data[3]) || 0;
-      
+              var searchMonth = parseInt(searchMonthEl.val(), 10);
+              var birthday = parseFloat(data[3]) || 0;
+
+              var birthdayMonth = -1;
+              if (birthday) {
+                // Parse the birthdate into a Moment object
+                var momentDate = moment(birthday, ["M/D/YYYY", "M/D/YY", "MM-DD-YYYY", "MM-DD-YY"]);
+                if (momentDate.isValid()) {
+                  birthdayMonth = momentDate.month() + 1; // add 1 since moment.js returns month index from 0
+                }
+              }
+            
               if (
-                  (isNaN(min) && isNaN(max)) ||
-                  (isNaN(min) && age <= max) ||
-                  (min <= age && isNaN(max)) ||
-                  (min <= age && age <= max)
+                  (isNaN(min) && isNaN(max) && isNaN(searchMonth)) ||
+                  (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth) ||
+                  (isNaN(min) && age <= max && birthdayMonth === searchMonth) ||
+                  (min <= age && isNaN(max) && birthdayMonth === searchMonth) ||
+                  (min <= age && age <= max && birthdayMonth === searchMonth)
               ) {
                   return true;
               }
@@ -156,6 +165,10 @@
               table.draw();
           });
           maxEl.on('input', function () {
+              table.draw();
+          });
+
+          searchMonthEl.on('input', function () {
               table.draw();
           });
       });
