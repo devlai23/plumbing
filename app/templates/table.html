@@ -131,7 +131,7 @@
           $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
               var min = parseInt(minEl.val(), 10);
               var max = parseInt(maxEl.val(), 10);
-              var age = parseFloat(data[10]) || 0;
+              var rank = parseFloat(data[10]) || 0;
 
               var searchMonth = parseInt(searchMonthEl.val(), 10);
               var birthday = parseFloat(data[3]) || 0;
@@ -146,11 +146,26 @@
               }
             
               if (
+                  // (isNaN(min) && isNaN(max) && isNaN(searchMonth)) ||
+                  // (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth) ||
+                  // (isNaN(min) && rank <= max && birthdayMonth === searchMonth) ||
+                  // (min <= rank && isNaN(max) && birthdayMonth === searchMonth) ||
+                  // (min <= rank && rank <= max && birthdayMonth === searchMonth)
+
+
                   (isNaN(min) && isNaN(max) && isNaN(searchMonth)) ||
                   (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth) ||
-                  (isNaN(min) && age <= max && birthdayMonth === searchMonth) ||
-                  (min <= age && isNaN(max) && birthdayMonth === searchMonth) ||
-                  (min <= age && age <= max && birthdayMonth === searchMonth)
+                  (isNaN(min) && rank <= max && (isNaN(searchMonth) || birthdayMonth === searchMonth)) ||
+                  (min <= rank && isNaN(max) && (isNaN(searchMonth) || birthdayMonth === searchMonth)) ||
+                  (min <= rank && rank <= max && (isNaN(searchMonth) || birthdayMonth === searchMonth))
+
+
+
+                  // works for only ranks
+                  // (isNaN(min) && isNaN(max)) ||
+                  // (isNaN(min) && rank <= max) ||
+                  // (min <= rank && isNaN(max)) ||
+                  // (min <= rank && rank <= max)
               ) {
                   return true;
               }
