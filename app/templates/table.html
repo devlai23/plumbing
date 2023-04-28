@@ -109,6 +109,15 @@
       </tr>
 
       <tr>
+        <td>Minimum points:</td>
+        <td><input type="text" id="min-points" name="min-points"></td>
+    </tr>
+    <tr>
+        <td>Maximum points:</td>
+        <td><input type="text" id="max-points" name="max-points"></td>
+    </tr>
+
+      <tr>
         <td>Birthday Month:</td>
         <td><input type="text" id="bday" name="bday"></td>
       </tr>
@@ -127,6 +136,8 @@
           var minEl = $('#min');
           var maxEl = $('#max');
           var searchMonthEl = $('#bday');
+          var minPointsEl = $('#min-points');
+          var maxPointsEl = $('#max-points');
       
           $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
               var min = parseInt(minEl.val(), 10);
@@ -135,8 +146,12 @@
 
               var searchMonth = parseInt(searchMonthEl.val(), 10);
               var birthday = parseFloat(data[3]) || 0;
-
               var birthdayMonth = -1;
+
+              var minPoints = parseFloat(minPointsEl.val()) || 0;
+              var maxPoints = parseFloat(maxPointsEl.val()) || Infinity;
+              var points = parseFloat(data[5]) || 0;
+
               if (birthday) {
                 // Parse the birthdate into a Moment object
                 var momentDate = moment(birthday, ["M/D/YYYY", "M/D/YY", "MM-DD-YYYY", "MM-DD-YY"]);
@@ -145,29 +160,36 @@
                 }
               }
             
-              if (
-                  // (isNaN(min) && isNaN(max) && isNaN(searchMonth)) ||
-                  // (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth) ||
-                  // (isNaN(min) && rank <= max && birthdayMonth === searchMonth) ||
-                  // (min <= rank && isNaN(max) && birthdayMonth === searchMonth) ||
-                  // (min <= rank && rank <= max && birthdayMonth === searchMonth)
+              // if (
+              //     (isNaN(min) && isNaN(max) && isNaN(searchMonth)) ||
+              //     (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth) ||
+              //     (isNaN(min) && rank <= max && (isNaN(searchMonth) || birthdayMonth === searchMonth)) ||
+              //     (min <= rank && isNaN(max) && (isNaN(searchMonth) || birthdayMonth === searchMonth)) ||
+              //     (min <= rank && rank <= max && (isNaN(searchMonth) || birthdayMonth === searchMonth))
+              // ) {
+              //     return true;
+              // }
 
-
-                  (isNaN(min) && isNaN(max) && isNaN(searchMonth)) ||
-                  (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth) ||
-                  (isNaN(min) && rank <= max && (isNaN(searchMonth) || birthdayMonth === searchMonth)) ||
-                  (min <= rank && isNaN(max) && (isNaN(searchMonth) || birthdayMonth === searchMonth)) ||
-                  (min <= rank && rank <= max && (isNaN(searchMonth) || birthdayMonth === searchMonth))
-
-
-
-                  // works for only ranks
-                  // (isNaN(min) && isNaN(max)) ||
-                  // (isNaN(min) && rank <= max) ||
-                  // (min <= rank && isNaN(max)) ||
-                  // (min <= rank && rank <= max)
-              ) {
-                  return true;
+              if (isNaN(min) && isNaN(max) && isNaN(searchMonth) && isNaN(minPoints) && isNaN(maxPoints)) {
+                return true;
+              }
+              if (isNaN(min) && isNaN(max) && isNaN(searchMonth) && points >= minPoints && points <= maxPoints) {
+                return true;
+              }
+              if ((isNaN(min) || rank >= min) && (isNaN(max) || rank <= max) && isNaN(searchMonth) && points >= minPoints && points <= maxPoints) {
+                return true;
+              }
+              if (isNaN(min) && isNaN(max) && birthdayMonth === searchMonth && points >= minPoints && points <= maxPoints) {
+                return true;
+              }
+              if ((isNaN(min) || rank >= min) && (isNaN(max) || rank <= max) && birthdayMonth === searchMonth && points >= minPoints && points <= maxPoints) {
+                return true;
+              }
+              if ((min <= rank) && isNaN(max) && birthdayMonth === searchMonth && points >= minPoints && points <= maxPoints) {
+                return true;
+              }
+              if ((min <= rank) && (rank <= max) && birthdayMonth === searchMonth && points >= minPoints && points <= maxPoints) {
+                return true;
               }
       
               return false;
@@ -185,6 +207,12 @@
 
           searchMonthEl.on('input', function () {
               table.draw();
+          });
+          minPointsEl.on('input', function () {
+            table.draw();
+          });
+          maxPointsEl.on('input', function () {
+            table.draw();
           });
       });
     </script>
