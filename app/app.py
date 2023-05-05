@@ -55,6 +55,18 @@ oauth.register(
 
 mysql = MySQL(app)
 
+def isSanatized(strArg):
+    acceptableCharacters = {' ': 's', '@': 'a', '-': 'd', '/': 'l', '.': 'p', ':': 'c'}
+    for x,y in acceptableCharacters.items():
+        strArg = strArg.replace(x, y)
+    if strArg == "":
+        return True
+    print(strArg)
+    if strArg.isalnum() == True:
+        return True
+    return False
+
+
 @app.route("/")
 def login():
     return oauth.auth0.authorize_redirect(
@@ -296,6 +308,9 @@ def post():
     now = datetime.datetime.now()
     formatted_date = now.strftime('%m/%d/%y %#I:%M:%S %p')
     command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email, Reg_Date) VALUES (" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") + "\", " + "\"" + formatted_date + "\"" + ")"
+    if(isSanatized(text.get("pnumber")) == False or isSanatized(text.get("lname")) == False or isSanatized(text.get("fname")) == False or isSanatized(text.get("bday")) == False or isSanatized(text.get("email")) == False):
+        print("input is not sanatized")
+        return render_template('index.html')
     cur.execute(command)
     mysql.connection.commit()
     cur.close()
