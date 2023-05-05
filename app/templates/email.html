@@ -54,52 +54,43 @@
         <h5 class="card-header">Send Email</h5>
         <div class="card-body">
           <form action="{{ url_for('send') }}" method="post" enctype = "multipart/form-data" novalidate>
-            <!--<div class="btn-group">
-              <button type="button" class="btn btn-info">Select Recipient</button>
-              <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only">Toggle Dropdown</span>
-              </button>
-              <div class="dropdown-menu" id="dropdown-menu">
-                <li><a class="dropdown-item" id="send-manually" onclick="updateDropdownTitle('Send Manually')">Send Manually</a></li>
-               <li><a class="dropdown-item" id="send-bdays" onclick="updateDropdownTitle('Send to Birthdays Coming Up')">Send to Birthdays Coming Up</a></li> 
-                <li><a class="dropdown-item" id="top-ranks" onclick="updateDropdownTitle('Send to Top Ranks')">Send to Top Ranks</a></li>
-                <li><a class="dropdown-item" id = "send-all" onclick="updateDropdownTitle('Send to All')">Send to All</a></li>
+            <div class="btn-group">
+              <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Recipient</button>
+              <div class="dropdown-menu" id="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <label class="dropdown-item" for="send-manually">
+                  <input class="form-check-input" type="radio" id="send-manually" name="send-option" value="send-manually"> Send Manually
+                </label>
+                <label class="dropdown-item" for="send-bdays">
+                  <input class="form-check-input" type="radio" id="send-bdays" name="send-option" value="send-bdays"> Send to Upcoming Birthdays
+                </label>
+                <label class="dropdown-item" for="top-ranks">
+                  <input class="form-check-input" type="radio" id="top-ranks" name="send-option" value="top-ranks"> Send to Top Ranks
+                </label>
+                <label class="dropdown-item" for="send-all">
+                  <input class="form-check-input" type="radio" id="send-all" name="send-option" value="send-all"> Send to All
+                </label>
               </div>
             </div>
+            <div class="textbox mt-10">
+              <input class="form-control" type="text" name="manual_emails" style="display:none" placeholder="Enter email addresses separated by spaces"/>
+            </div>
 
-            <div id="manual-emails" style="display:none;">
-              <label for="email">Emails You Want to Send to Your Customers (separate with commas)</label>
-              <input type="text" id="email" name="email" required>
-            </div> -->
-
-              <input class="form-check-input" type="radio" id="send-manually" name="send-option" value="send-manually" checked>
-              <label class="form-check-label" for="send-manually">Send Manually</label>
-              <input class="form-control mt-2" type="text" name="manual_emails" placeholder="Enter email addresses separated by spaces"/>
+            <br>
+            <div class="upload">
+              <div class="mb-3">
+                <label for="file" class="form-label">Choose an image to upload:</label>
+                <input class="form-control" type="file" name="file" id="formFile">
+              </div>
               <br>
-              <input class="form-check-input" type="radio" id="send-all" name="send-option" value="send-all">
-              <label class="form-check-label" for="send-all">Send to All</label>
+              <label for="textbox">Enter your message:</label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text" id="inputGroup-sizing-lg"></span>
+                <input type="text" name="textbox" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
+              </div>
               <br>
-              <div id="manual-emails" style="display:none">
-                <label for="email">Emails You Want to Send to Your Customers (separate with commas)</label>
-                <input type="text" id="email" name="email" required>
-              </div> <!--what is the point of this code-->
-              <br>
-                    <div class="upload">
-                      <div class="mb-3">
-                        <label for="file" class="form-label">Choose an image to upload:</label>
-                        <input class="form-control" type="file" name="file" id="formFile">
-                      </div>
-                      <br>
-                      <label for="textbox">Enter your message:</label>
-                      <div class="input-group input-group-lg">
-                        <span class="input-group-text" id="inputGroup-sizing-lg"></span>
-                        <input type="text" name="textbox" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
-                      </div>
-                      <br>
-                      <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Submit</button>
-                    </div>
-                  </form>
-                </div>
+              <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Submit</button>
+            </div>
+          </form>
         </div>
     </div>
 
@@ -122,70 +113,67 @@
         </div>
       </div>
     </div>
-    {% endif %}
+    {% else %}
+    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="modalLabel2">Email Error</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  There was an error sending the email. Please try again later.
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endif %}
+
 
     
-
+    <script type="module" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type = "text/javascript">
       $(document).ready(function() {
         $('#success-modal').modal('show'); 
       });
+
+      $(document).ready(function(){
+        $('.dropdown-item').click(function(){
+            var selectedValue = $(this).data('value');
+            $('.dropdown-toggle').html($(this).text());
+        });
+        });  
+        
+        $(document).ready(function(){
+      $('#dropdown-menu input').click(function(){
+        if ($(this).attr('id') === 'send-manually') {
+          $('input[name="manual_emails"]').toggle($(this).val() === 'send-manually');
+        } else {
+          $('input[name="manual_emails"]').hide();
+        }
+      });
+    });
     </script>
 
     
 
-          <!--
-    <div class="inside">
-        <div class="form">
-            <form action="{{ url_for('send') }}" method="post" enctype = "multipart/form-data">
-              <h1 class="test">Send Email</h1>
-              <input type="radio" id="send-all" name="send-option" value="send-all" checked>
-              <label for="send-all">Send to All</label>
+     <!--
+               <input class="form-check-input" type="radio" id="send-manually" name="send-option" value="send-manually" checked>
+              <label class="form-check-label" for="send-manually">Send Manually</label>
+              <input class="form-control mt-2" type="text" name="manual_emails" placeholder="Enter email addresses separated by spaces"/>
               <br>
-              <input type="radio" id="send-manually" name="send-option" value="send-manually">
-              <label for="send-manually">Send Manually</label>
-              <input type="text" name="manual_emails" placeholder="Enter email addresses separated by comma"/>
+              <input class="form-check-input" type="radio" id="send-all" name="send-option" value="send-all">
+              <label class="form-check-label" for="send-all">Send to All</label>
               <br>
               <div id="manual-emails" style="display:none">
                 <label for="email">Emails You Want to Send to Your Customers (separate with commas)</label>
-                <input type="text" id="email" name="email">
-              </div>
-              <br>
-              <div class="upload">
-                <label for="file">Choose an image to upload:</label>
-                <input type="file" id="file" name="file">
-                <br>
-                <label for="textbox">Enter your message:</label>
-                <input type="text" id="textbox" name="textbox">
-                <br>
-                <input type="submit" value="Send">
-              </div>
-            </form>
-          </div>
-
-
-
-        <div class = "form">
-            <form action="" method="post">
-                <h1 class = "test"> hello </h1>
-            </form>
-        </div>
-
-        <div class = "upload">
-            <form action = "/upload" method = "post" enctype = "multipart/form-data">
-                <input type = "file" name = "file"/>
-                <input type="text" name="textbox" />
-                <input type = "submit" value="Upload" />
-            </form>
-        </div>
-    
-        <div class = "radiobtn">
-            <input type="radio" id="all" name="sending" value="all">
-            <label for="all">Send to All Rewards Members</label><br>
-            <input type="radio" id="manual" name="sending" value="manual" onclick="showtext">
-            <label for="manual">Send Manually</label><br>
-            <input type="text" id="customer-emails" name="customer-emails">
-        </div> -->
+                <input type="text" id="email" name="email" required>
+              </div> <!--what is the point of this code-->
        
     </div>
 
