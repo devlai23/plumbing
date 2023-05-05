@@ -3,19 +3,15 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
-from io import BytesIO
 from authlib.integrations.flask_client import OAuth
 from urllib.parse import quote_plus, urlencode
-#import Order
 import os
-import xlwt
 import xlrd
-from xlutils.copy import copy
-import sys
 import re
 import base64
 from jinja2 import Environment, FileSystemLoader
 import datetime
+from functools import wraps
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -55,6 +51,20 @@ oauth.register(
 
 mysql = MySQL(app)
 
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'user' not in session:
+            return redirect('/')
+        access_token = session['user']['access_token']
+        if not access_token:
+            return redirect('/')
+        try:
+            return f(*args, **kwargs)
+        except:
+            return redirect('/')
+    return decorated
+
 @app.route("/")
 def login():
     return oauth.auth0.authorize_redirect(
@@ -62,6 +72,7 @@ def login():
     )
 
 @app.route("/index.html")
+@requires_auth
 def index():
     return render_template("index.html")
 
@@ -93,6 +104,7 @@ def out():
     )
 
 @app.route("/email.html")
+@requires_auth
 def email():
     return render_template("email.html") 
 
@@ -215,12 +227,10 @@ def send():
         return render_template('email.html', email_sent=email_sent)
     
 
-    
-
 @app.route("/analytics.html")
+@requires_auth
 def analytics():
     return render_template("analytics.html") 
-
 
 @app.route("/analytics.html", methods=['POST'])
 def refresh():
@@ -260,6 +270,7 @@ def refresh():
 #def getTopBuyers():
     
 @app.route("/table.html")
+@requires_auth
 def table():
     # environment = Environment(loader=FileSystemLoader("app/templates/"))
     #template = environment.get_template("table.html")
@@ -274,6 +285,7 @@ def table():
     return render_template("table.html", mochidata=mochidata)
 
 @app.route('/latest.html')
+@requires_auth
 def new_page():
     cur = mysql.connection.cursor()
     query = """SELECT *
