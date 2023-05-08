@@ -30,10 +30,16 @@ app.config["MYSQL_DB"] = "capstone_2223_mochinut"
 app.secret_key = env.get("APP_SECRET_KEY")
 
 # configuration of mail
-app.config['MAIL_SERVER']='smtp.gmail.com'
+# app.config['MAIL_SERVER']='smtp.gmail.com'
+# app.config['MAIL_PORT'] = 465
+# app.config['MAIL_USERNAME'] = 'mochinutloyalty@gmail.com'
+# app.config['MAIL_PASSWORD'] = 'smbjiqfaqlbwwzpr' 
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_SERVER']='secure.emailsrvr.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'mochinutloyalty@gmail.com'
-app.config['MAIL_PASSWORD'] = 'smbjiqfaqlbwwzpr' 
+app.config['MAIL_USERNAME'] = 'info@mochinut-tenafly.com'
+app.config['MAIL_PASSWORD'] = 'Work4God1' 
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -128,7 +134,7 @@ def send():
             image_data = f.read()
 
         encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=emailArr)
         with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
             email_template = f.read()
 
@@ -162,7 +168,7 @@ def send():
             image_data = f.read()
 
         encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=emailArr)
         with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
             email_template = f.read()
 
