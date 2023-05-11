@@ -98,26 +98,89 @@
         </table>
     </div>
 
+    <button id="export-btn">Export to CSV</button>
+    <script>
+      function downloadCSV(csv, filename) {
+        var csvFile;
+        var downloadLink;
+    
+        // Create CSV file
+        csvFile = new Blob([csv], { type: "text/csv" });
+    
+        // Create download link
+        downloadLink = document.createElement("a");
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = "none";
+    
+        // Add the download link to the page
+        document.body.appendChild(downloadLink);
+    
+        // Click download link
+        downloadLink.click();
+      }
+    
+      function exportTableToCSV(filename) {
+        var csv = [];
+        var rows = document.querySelectorAll("table tr");
+    
+        // Collect data from table
+        for (var i = 0; i < rows.length; i++) {
+          var row = [],
+            cols = rows[i].querySelectorAll("td, th");
+    
+          for (var j = 0; j < cols.length; j++) row.push(cols[j].innerText);
+    
+          csv.push(row.join(","));
+        }
+    
+        // Download CSV file
+        downloadCSV(csv.join("\n"), filename);
+      }
+    
+      document.getElementById("export-btn").addEventListener("click", function () {
+        exportTableToCSV("table.csv");
+      });
+
+      function exportTableToCSV(filename) {
+        var csv = [];
+        var rows = document.querySelectorAll("table tr:not(.hidden)");
+
+        // Collect data from filtered table
+        for (var i = 0; i < rows.length; i++) {
+          var row = [],
+            cols = rows[i].querySelectorAll("td, th");
+
+          for (var j = 0; j < cols.length; j++) row.push(cols[j].innerText);
+
+          csv.push(row.join(","));
+        }
+
+        // Download CSV file
+        downloadCSV(csv.join("\n"), filename);
+      }
+    </script>
+
     <table class="inputs">
-      <tbody><tr>
+      <tbody><tr class="hidden">
           <td>Minimum rank:</td>
           <td><input type="text" id="min" name="min"></td>
       </tr>
-      <tr>
+      <tr class="hidden">
           <td>Maximum rank:</td>
           <td><input type="text" id="max" name="max"></td>
       </tr>
 
-      <tr>
+      <tr class="hidden">
         <td>Minimum points:</td>
         <td><input type="text" id="min-points" name="min-points"></td>
     </tr>
-    <tr>
+    <tr class="hidden">
         <td>Maximum points:</td>
         <td><input type="text" id="max-points" name="max-points"></td>
     </tr>
 
-      <tr>
+      <tr class="hidden">
         <td>Birthday Month:</td>
         <td><input type="text" id="bday" name="bday"></td>
       </tr>
