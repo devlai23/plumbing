@@ -236,44 +236,38 @@ def send():
 @app.route("/analytics.html")
 @requires_auth
 def analytics():
-    return render_template("analytics.html") 
-
-@app.route("/analytics.html", methods=['POST'])
-def refresh():
-    if 'mybutton' in request.form:
-        cur = mysql.connection.cursor()
-        query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
-        cur.execute(query)
-        rows = cur.fetchall()
-        popular_items = []
-        for row in rows:
-            popular_items.append((row[0], row[1]))
-        return render_template('analytics.html', chart_data=popular_items) 
-    elif 'buyerButton' in request.form:
-        top_buyers = []
-        top_buyers = request.args.get('top-buyers')
-        top_buyersMilkTea = []
-        selected = request.args.get('selected')
-        cur = mysql.connection.cursor()
-        queryMochi = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"1 MOCHINUT\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
-        cur.execute(queryMochi)
-        queryBubbleTea = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"MILKTEA\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
-        topBuyerRows = cur.fetchall()
-        cur.execute(queryBubbleTea)
-        topBubbleRows = cur.fetchall()
-        if topBuyerRows:
-            top_buyers = [row[1] for row in topBuyerRows]
-        else:
-            top_buyers = []
-        if topBubbleRows:
-            top_buyersMilkTea = [row[1] for row in topBubbleRows]
-        else:
-            top_buyersMilkTea = []
-        return render_template('analytics.html', topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)
+    #if 'mybutton' in request.form:
+    cur = mysql.connection.cursor()
+    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
+    cur.execute(query)
+    rows = cur.fetchall()
+    popular_items = []
+    for row in rows:
+        popular_items.append((row[0], row[1]))
+    #return render_template('analytics.html', chart_data=popular_items) 
+    #elif 'buyerButton' in request.form:
+    top_buyers = []
+    top_buyers = request.args.get('top-buyers')
+    top_buyersMilkTea = []
+    selected = request.args.get('selected')
+    cur = mysql.connection.cursor()
+    queryMochi = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"1 MOCHINUT\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
+    cur.execute(queryMochi)
+    queryBubbleTea = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"MILKTEA\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
+    topBuyerRows = cur.fetchall()
+    cur.execute(queryBubbleTea)
+    topBubbleRows = cur.fetchall()
+    if topBuyerRows:
+        top_buyers = [row[1] for row in topBuyerRows]
     else:
-        return render_template('analytics.html')  
-#@app.route("/analytics.html", methods=['post'])
-#def getTopBuyers():
+        top_buyers = []
+    if topBubbleRows:
+        top_buyersMilkTea = [row[1] for row in topBubbleRows]
+    else:
+        top_buyersMilkTea = []
+    #return render_template('analytics.html', topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)
+    return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)  
+
     
 @app.route("/table.html")
 @requires_auth
