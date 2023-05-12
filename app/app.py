@@ -371,9 +371,10 @@ def success():
                     Visit_Count = str(bookSheet.cell(row, 8).value)
                     Last_Visit_Date = str(bookSheet.cell(row, 9).value)
                     query = "INSERT INTO Customer VALUES(" + Customer_ID + ", \"" + Customer_Name + "\" , \"" + Reg_Date + "\" , \"" + Customer_Bday + "\" , \"" + Customer_Email + "\" , \"" + Bonus + "\" , \"" + Bonus_Used + "\" , \"" + Sales_Total + "\" , \"" + Discount_Total + "\" , \"" + Discount_Ratio + "\" ," + Rank + " ," + Visit_Count + " , \"" + Last_Visit_Date + "\")"
-                    cur.execute(query)
-                    mysql.connection.commit()
-                    count+=1
+                    if(isSanatized(Customer_ID) and isSanatized(Customer_Name) and isSanatized(Reg_Date) and isSanatized(Customer_Bday) and isSanatized(Customer_Email) and isSanatized(Bonus) and isSanatized(Bonus_Used) and isSanatized(Sales_Total) and isSanatized(Discount_Total) and isSanatized(Discount_Ratio) and isSanatized(Rank) and isSanatized(Visit_Count) and isSanatized(Last_Visit_Date)):
+                        cur.execute(query)
+                        mysql.connection.commit()
+                        count+= 1
         print("TESTFLOW:", str(count), "new members were successfully added to the database")
 
 
@@ -432,6 +433,8 @@ def success():
                 cur.execute("select if("+ str(order.customerID) +" in (select Customer_ID from Customer), 1, 0)")
                 exists = str(cur.fetchall())
                 if exists[2] == "1":
+                    if(order.insertQuery() == ""):
+                        continue
                     cur.execute(order.insertQuery())
                     mysql.connection.commit()
                     count +=1
@@ -468,8 +471,11 @@ def success():
                 rv = str(cur.fetchall())
                 if rv[2] == '1':
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
-                    cur.execute(query)
-                    mysql.connection.commit()
+                    #If this doesnt work try removing isSanatized(value)
+                    if(isSanatized(name) and isSanatized(bonus) and isSanatized(bonusUsed) and isSanatized(salesTotal) and isSanatized(discountTotal) and isSanatized(discountRatio) and isSanatized(rank) and isSanatized(visitCount) and isSanatized(lastVisitDate) and isSanatized(value)):
+                        cur.execute(query)
+                        mysql.connection.commit()
+                    
         print("Other fields for all customers have been updated")
 
         os.remove(path1)
