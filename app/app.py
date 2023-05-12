@@ -155,7 +155,14 @@ def send():
     
     elif send_type == 'send-all':
         #RUN QUERY TO GET ARRAY WITH ALL EMAIL ADDRESSES
-        emailArr = QUERY
+        cur = mysql.connection.cursor()
+        emailArr = "select Customer_Email from Customer where Customer_Email is not null and Customer_Email != ''"
+        cur.execute(emailArr)
+        string = str(cur.fetchall())
+        tup = eval(string)
+        emailArr = [elem[0] for elem in tup]
+        print(emailArr)
+
 
         image = request.files['file']
         text = request.form['textbox']
@@ -185,52 +192,93 @@ def send():
 
     elif send_type == 'send-bdays':
         cur = mysql.connection.cursor()
-        today = datetime.date.today()
-        start_of_week = today - datetime.timedelta(days=today.weekday())
-        end_of_week = start_of_week + datetime.timedelta(days=6)
-        # EDIT STARTING HERE
-        query = f"SELECT Customer_Email FROM Customer WHERE DATE_FORMAT(Customer_Bday, '%m-%d') BETWEEN '{start_of_week.strftime('%m-%d')}' AND '{end_of_week.strftime('%m-%d')}'"
-        cur.execute(query)
-        rv = str(cur.fetchall())
-
-        print(rv); 
-
-        bday_emails = []
+        emailArr = """SELECT Customer_Email
+            FROM Customer
+            WHERE STR_TO_DATE(
+            CONCAT(
+                CASE
+                WHEN LENGTH(Customer_Bday) = 4 THEN CONCAT('0', SUBSTRING(Customer_Bday, 1, 1), '/', SUBSTRING(Customer_Bday, 3, 2))
+                ELSE SUBSTRING(Customer_Bday, 1, 5)
+                END,
+                '/',
+                YEAR(NOW())
+            ),
+            '%m/%d/%Y'
+            ) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 WEEK)"""
         
-        
-        # image = request.files['file']
-        # text = request.form['textbox']
+        cur.execute(emailArr)
+        string = str(cur.fetchall())
+        tup = eval(string)
+        emailArr = [elem[0] for elem in tup]
 
-        # image_folder = os.path.join(APP_ROOT, 'images')
-        # image_path = os.path.join(image_folder, image.filename)
-        # image.save(image_path)
+        image = request.files['file']
+        text = request.form['textbox']
 
-        # with open(image_path, 'rb') as f:
-        #     image_data = f.read()
+        image_folder = os.path.join(APP_ROOT, 'images')
+        image_path = os.path.join(image_folder, image.filename)
+        image.save(image_path)
 
-        # encoded_image = base64.b64encode(image_data).decode('utf-8')
-        # msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
-        # with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-        #     email_template = f.read()
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
 
-        # # attach the image to the email
-        # with app.open_resource(image_path) as fp:
-        #     msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+            email_template = f.read()
 
-        # # set the HTML content with a reference to the attached image
-        # msg.html = email_template.format(image_cid='image', text=text)
-        # mail.send(msg)
+        # attach the image to the email
+        with app.open_resource(image_path) as fp:
+            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+        # set the HTML content with a reference to the attached image
+        msg.html = email_template.format(image_cid='image', text=text)
+        mail.send(msg)
         email_sent = True
 
+        return render_template('email.html')
+    
+    elif send_type == 'top-ranks':
+        cur = mysql.connection.cursor()
+        emailArr = """SELECT Customer_Email FROM Customer WHERE Customer_Rank IS NOT NULL ORDER BY Customer_Rank ASC LIMIT 10"""
+        
+        cur.execute(emailArr)
+        string = str(cur.fetchall())
+        tup = eval(string)
+        emailArr = [elem[0] for elem in tup]
 
-        return render_template('email.html', email_sent=email_sent)
+        image = request.files['file']
+        text = request.form['textbox']
 
+        image_folder = os.path.join(APP_ROOT, 'images')
+        image_path = os.path.join(image_folder, image.filename)
+        image.save(image_path)
+
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
+
+        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+            email_template = f.read()
+
+        # attach the image to the email
+        with app.open_resource(image_path) as fp:
+            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+        # set the HTML content with a reference to the attached image
+        msg.html = email_template.format(image_cid='image', text=text)
+        mail.send(msg)
+        email_sent = True
+
+        return render_template('email.html')
+
+        
     else:
         email_sent = False
 
         print("email_sent:", email_sent)
 
-        return render_template('email.html', email_sent=email_sent)
+        return render_template('email.html')
     
 
 @app.route("/analytics.html")
