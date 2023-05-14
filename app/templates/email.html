@@ -89,6 +89,9 @@
               </div>
               <br>
               <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Submit</button>
+              <form method="post" action="/send-email">
+                <button type="submit" name="preview" value="1">Preview Email</button>
+              </form>
             </div>
           </form>
         </div>
@@ -159,22 +162,31 @@
       });
     });
     </script>
-
-    
-
-     <!--
-               <input class="form-check-input" type="radio" id="send-manually" name="send-option" value="send-manually" checked>
-              <label class="form-check-label" for="send-manually">Send Manually</label>
-              <input class="form-control mt-2" type="text" name="manual_emails" placeholder="Enter email addresses separated by spaces"/>
-              <br>
-              <input class="form-check-input" type="radio" id="send-all" name="send-option" value="send-all">
-              <label class="form-check-label" for="send-all">Send to All</label>
-              <br>
-              <div id="manual-emails" style="display:none">
-                <label for="email">Emails You Want to Send to Your Customers (separate with commas)</label>
-                <input type="text" id="email" name="email" required>
-              </div> <!--what is the point of this code-->
-       
+    <script>
+      const previewButton = document.querySelector('#preview-button');
+      const emailInput = document.querySelector('#manual_emails');
+      const fileInput = document.querySelector('#file');
+      const textInput = document.querySelector('#textbox');
+  
+      previewButton.addEventListener('click', async () => {
+          const formData = new FormData();
+          formData.append('manual_emails', emailInput.value);
+          formData.append('file', fileInput.files[0]);
+          formData.append('textbox', textInput.value);
+  
+          const response = await fetch('/preview-email', {
+              method: 'POST',
+              body: formData,
+          });
+  
+          const preview = await response.json();
+          const previewWindow = window.open('', 'Email Preview');
+          previewWindow.document.write(`
+              <h2>To: ${preview.email}</h2>
+              <img src="data:image/png;base64,${preview.image_data}">
+              ${preview.html_content}
+          `);
+      });
+    </script>
     </div>
-
 </body>

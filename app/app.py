@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, jsonify, render_template_string
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from dotenv import find_dotenv, load_dotenv
@@ -12,6 +12,8 @@ import base64
 from jinja2 import Environment, FileSystemLoader
 import datetime
 from functools import wraps
+from PIL import Image
+import io
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -118,6 +120,39 @@ def email():
 def send():
     send_type = request.form.get('send-option')
     print("send_type:", send_type)
+    if request.method == "POST":
+        if 'preview' in request.form:
+            print("Preview mode")
+            email = request.form['manual_emails']
+            emailArr = email.split()
+            image = request.files['file']
+            text = request.form['textbox']
+
+            image_folder = os.path.join(APP_ROOT, 'images')
+            image_path = os.path.join(image_folder, image.filename)
+            image.save(image_path)
+
+            with open(image_path, 'rb') as f:
+                image_data = f.read()
+
+            encoded_image = base64.b64encode(image_data).decode('utf-8')
+            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+                email_template = f.read()
+
+            size = (400, 400)
+            img = Image.open(io.BytesIO(image_data))
+            img.thumbnail(size)
+            output = io.BytesIO()
+            img.save(output, format='PNG')
+            encoded_image = base64.b64encode(output.getvalue()).decode('utf-8')
+
+            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+                email_template = f.read()
+
+            html_content = email_template.format(image_cid='image', text=text)
+            html_content = html_content.replace('cid:image', 'data:image/png;base64,' + encoded_image)
+
+            return html_content
 
     # if code can be streamlined
     if send_type == 'send-manually':
