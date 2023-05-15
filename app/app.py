@@ -14,6 +14,7 @@ import datetime
 from functools import wraps
 from PIL import Image
 import io
+import Order
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -425,7 +426,10 @@ def success():
         for char in lastPos:
             if ord(char) > 47 and ord(char) < 58:
                 newString += char
-        lastPos = int(newString)
+        if newString != "":
+            lastPos = int(newString)
+        else:
+            lastPos = 0
 
         path1 = ""
         path2 = ""
@@ -442,7 +446,7 @@ def success():
         bookSheet = book.sheet_by_index(0)
         count = 0
         for row in range(2, bookSheet.nrows):
-            value = re.sub("\\D+", "", str(bookSheet.cell(row, 11).value))
+            value = re.sub("\\D+", "", str(bookSheet.cell(row, 12).value))
             if value != "": 
                 value = str(int(value))
                 query = "Select if("+value+ " in (select Customer_ID from Customer), 1, 0)"
@@ -467,7 +471,6 @@ def success():
                     mysql.connection.commit()
                     count+=1
         print("TESTFLOW:", str(count), "new members were successfully added to the database")
-
 
         # SEARCH FOR NEW ORDERS
         cshPath = ""
@@ -570,28 +573,28 @@ def success():
         cur.close()
         return render_template("analytics.html")
 
-class Order:
-    def __init__(self, invoiceID, date, item):
-        self.invoiceID = invoiceID
-        self.date = date
-        self.item = item
-        self.customerID = -1
+# class Order:
+#     def __init__(self, invoiceID, date, item):
+#         self.invoiceID = invoiceID
+#         self.date = date
+#         self.item = item
+#         self.customerID = -1
 
-    def setCustomerID(self, customerID):
-        self.customerID = customerID
+#     def setCustomerID(self, customerID):
+#         self.customerID = customerID
 
-    def getInvoice(self):
-        return self.invoiceID
+#     def getInvoice(self):
+#         return self.invoiceID
 
-    def getDate(self):
-        return self.date
+#     def getDate(self):
+#         return self.date
     
-    def __str__(self):
-     return str(self.invoiceID) + "\n" + str(self.date) + "\n" + str(self.item) + "\n" + str(self.customerID) + "\n"
+#     def __str__(self):
+#      return str(self.invoiceID) + "\n" + str(self.date) + "\n" + str(self.item) + "\n" + str(self.customerID) + "\n"
 
-    def insertQuery(self):
-        formatted = "INSERT INTO Purchases(Invoice_ID, Item, Customer_ID, Date) VALUES (" + str(self.invoiceID) + ", \"" + str(self.item) + "\", " + str(self.customerID) + ", \"" + str(self.date) + "\")"
-        return formatted
+#     def insertQuery(self):
+#         formatted = "INSERT INTO Purchases(Invoice_ID, Item, Customer_ID, Date) VALUES (" + str(self.invoiceID) + ", \"" + str(self.item) + "\", " + str(self.customerID) + ", \"" + str(self.date) + "\")"
+#         return formatted
 
 
 
