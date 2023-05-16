@@ -169,25 +169,57 @@ def send():
         with open(image_path, 'rb') as f:
             image_data = f.read()
 
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=emailArr)
-        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-            email_template = f.read()
+        for email in emailArr:
+            print("looping through emails")
+            encoded_image = base64.b64encode(image_data).decode('utf-8')
+            msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
+            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+                email_template = f.read()
 
-        # attach the image to the email
-        with app.open_resource(image_path) as fp:
-            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+            # attach the image to the email
+            with app.open_resource(image_path) as fp:
+                msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
 
-        # set the HTML content with a reference to the attached image
-        msg.html = email_template.format(image_cid='image', text=text)
-        mail.send(msg)
+            # replace any [name] with customer names
+            if "[name]" in text:
+                cur = mysql.connection.cursor()
+                query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
+                print(query)
+                cur.execute(query)
+                rv = str(cur.fetchall())
+                if ',' in rv:
+                    first_name = rv.split(',')[1].strip().rstrip("',)")
+                    text = text.replace("[name]", first_name)
+                else:
+                    text = text.replace("[name]", "Customer")
 
-        email_sent = True
+            # set the HTML content with a reference to the attached image
+            msg.html = email_template.format(image_cid='image', text=text)
+            mail.send(msg)
+            email_sent = True
+            print("email_sent:", email_sent)
+            return render_template('email.html', email_sent=email_sent)
+            
 
-        print("email_sent:", email_sent)
+        # encoded_image = base64.b64encode(image_data).decode('utf-8')
+        # msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=emailArr)
+        # with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+        #     email_template = f.read()
+
+        # # attach the image to the email
+        # with app.open_resource(image_path) as fp:
+        #     msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+        # # set the HTML content with a reference to the attached image
+        # msg.html = email_template.format(image_cid='image', text=text)
+        # mail.send(msg)
+
+        # email_sent = True
+
+        # print("email_sent:", email_sent)
 
 
-        return render_template('email.html', email_sent=email_sent)
+        # return render_template('email.html', email_sent=email_sent)
     
     elif send_type == 'send-all':
         #RUN QUERY TO GET ARRAY WITH ALL EMAIL ADDRESSES
