@@ -74,6 +74,18 @@ def requires_auth(f):
             return redirect('/')
     return decorated
 
+def isSanatized(strArg):
+    acceptableCharacters = {' ': 's', '@': 'a', '-': 'd', '/': 'l', '.': 'p', ':': 'c'}
+    for x,y in acceptableCharacters.items():
+        strArg = strArg.replace(x, y)
+    if strArg == "":
+        return True
+    print(strArg)
+    if strArg.isalnum() == True:
+        return True
+    return False
+
+
 @app.route("/")
 def login():
     return oauth.auth0.authorize_redirect(
@@ -436,6 +448,9 @@ def post():
     now = datetime.datetime.now()
     formatted_date = now.strftime('%m/%d/%y %#I:%M:%S %p')
     command = "INSERT INTO Customer (Customer_ID, Customer_Name, Customer_Bday, Customer_Email, Reg_Date) VALUES (" + "\"" + text.get("pnumber") + "\"" + ", " + "\"" + text.get("lname") + ", " + text.get("fname") + "\", "  + "\"" + text.get("bday") + "\"" + ", " + "\"" + text.get("email") + "\", " + "\"" + formatted_date + "\"" + ")"
+    if(isSanatized(text.get("pnumber")) == False or isSanatized(text.get("lname")) == False or isSanatized(text.get("fname")) == False or isSanatized(text.get("bday")) == False or isSanatized(text.get("email")) == False):
+        print("input is not sanatized")
+        return render_template('index.html')
     cur.execute(command)
     mysql.connection.commit()
     cur.close()
@@ -499,9 +514,11 @@ def success():
                     Visit_Count = str(bookSheet.cell(row, 8).value)
                     Last_Visit_Date = str(bookSheet.cell(row, 9).value)
                     query = "INSERT INTO Customer VALUES(" + Customer_ID + ", \"" + Customer_Name + "\" , \"" + Reg_Date + "\" , \"" + Customer_Bday + "\" , \"" + Customer_Email + "\" , \"" + Bonus + "\" , \"" + Bonus_Used + "\" , \"" + Sales_Total + "\" , \"" + Discount_Total + "\" , \"" + Discount_Ratio + "\" ," + Rank + " ," + Visit_Count + " , \"" + Last_Visit_Date + "\")"
-                    cur.execute(query)
-                    mysql.connection.commit()
-                    count+=1
+                    if(isSanatized(Customer_ID) and isSanatized(Customer_Name) and isSanatized(Reg_Date) and isSanatized(Customer_Bday) and isSanatized(Customer_Email) and isSanatized(Bonus) and isSanatized(Bonus_Used) and isSanatized(Sales_Total) and isSanatized(Discount_Total) and isSanatized(Discount_Ratio) and isSanatized(Rank) and isSanatized(Visit_Count) and isSanatized(Last_Visit_Date)):
+                        cur.execute(query)
+                        mysql.connection.commit()
+                        count+= 1
+
         print("TESTFLOW:", str(count), "new members were successfully added to the database")
 
         # SEARCH FOR NEW ORDERS
@@ -595,8 +612,9 @@ def success():
                 rv = str(cur.fetchall())
                 if rv[2] == '1':
                     query = "update Customer set Customer_Name = \"" + name + "\", Bonus = \"" + bonus + "\", Bonus_Used = \"" + bonusUsed + "\", Sales_Total = \"" + salesTotal + "\", Discount_Total = \"" + discountTotal + "\", Discount_Ratio = \"" + discountRatio + "\", Customer_Rank = " + rank + ", Visit_Count = " + visitCount + ", Last_Visit_Date = \"" + lastVisitDate + "\" where Customer_ID = " + value
-                    cur.execute(query)
-                    mysql.connection.commit()
+                    if(isSanatized(name) and isSanatized(bonus) and isSanatized(bonusUsed) and isSanatized(salesTotal) and isSanatized(discountTotal) and isSanatized(discountRatio) and isSanatized(rank) and isSanatized(visitCount) and isSanatized(lastVisitDate) and isSanatized(value)):
+                        cur.execute(query)
+                        mysql.connection.commit()
         print("Other fields for all customers have been updated")
 
         os.remove(path1)
