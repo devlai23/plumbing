@@ -182,7 +182,6 @@ def send():
             image_data = f.read()
 
         for email in emailArr:
-            print("looping through emails")
             encoded_image = base64.b64encode(image_data).decode('utf-8')
             msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
             with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
@@ -196,7 +195,6 @@ def send():
             if "[name]" in text:
                 cur = mysql.connection.cursor()
                 query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
-                print(query)
                 cur.execute(query)
                 rv = str(cur.fetchall())
                 if ',' in rv:
@@ -204,6 +202,16 @@ def send():
                     text = text.replace("[name]", first_name)
                 else:
                     text = text.replace("[name]", "Customer")
+            
+            if "[points]" in text:
+                print("entered")
+                cur = mysql.connection.cursor()
+                query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
+                cur.execute(query)
+                rv = str(cur.fetchall())
+                decimalPart = re.search(r"\d+\.\d+", rv).group(0)
+                intPoints = int(decimalPart.split(".")[0])
+                text = text.replace("[points]", str(intPoints))
 
             # set the HTML content with a reference to the attached image
             msg.html = email_template.format(image_cid='image', text=text)
@@ -365,8 +373,9 @@ def send():
 @requires_auth
 def analytics():
     #if 'mybutton' in request.form:
-    cur = mysql.connection.cursor()
-    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
+    cur = mysql.connection.cursor
+    number = int(request.args.get("number"))
+    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT " + number
     cur.execute(query)
     rows = cur.fetchall()
     popular_items = []
