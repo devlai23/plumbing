@@ -72,13 +72,12 @@
     </div>
 
     <div class="card mt-4  mx-auto" style="width: 50rem;">
-        <h5 class="card-header">Top 5 most POPULAR products at Mochinut Tenafly:</h5>
+        <h5 class="card-header">Top <form id="popular-products">
+            <input type="number" min="1" max="9" value="5" required class="form-control" placeholder="Enter a # less than 10" id="product-num" name="product-num">
+        </form> most POPULAR products at Mochinut Tenafly:</h5>
         <div class="card-body">
             <form action="/analytics.html" method="post">
-                <!-- <button type="submit" class="btn btn-outline-info text-right" name = "mybutton">Refresh Data</button> -->
-                <!--<input type="submit" name="mybutton" value="Click me"> -->
             </form>
-            <div class = "top-5-products" id = "top-5-products"></div>  
         </div>
       </div>
 
@@ -100,15 +99,6 @@
                 <div id ="unselected" class="data">
                     <h4>Choose a Category to See Analytics</h4>
                 </div>
-                <!-- <div id ="hot-dog" class="data">
-                    <ol>
-                        <li>Harry Potter</li>
-                        <li>Draco Malfoy</li>
-                        <li>Hermione Granger</li>
-                        <li>Ron Weasley</li>
-                        <li>Severus Snape</li>
-                    </ol>
-                </div> -->
                 <div id ="bubble-tea" class="data">
                     <ol>
                         {% for item in top_buyersMilkTea %}
@@ -123,20 +113,12 @@
                         {% endfor %}
                     </ol>
                 </div>
-                <!-- <div id ="spicy-rice-cakes" class="data">
-                    <ol>
-                        <li>Nathasha Romanoff</li>
-                        <li>Steve Rogers</li>
-                        <li>Tony Stark</li>
-                        <li>Thor Odinson</li>
-                        <li>Wanda Maximoff</li>
-                    </ol>
-                </div> -->
             </div> 
         </div>
       </div>
     
     <script type="text/javascript">
+
         anychart.onDocumentReady(function() {
             {% if chart_data %}
             var chart_data = {{ chart_data|tojson|safe }};
@@ -159,13 +141,13 @@
             var label = anychart.standalones.label(); 
             label
                 .enabled(true)
-                .text('Top 5 most POPULAR products')
+                .text('Most POPULAR products')
                 .width('100%')
                 .height('100%')
                 .adjustFontSize(true, true)
                 .minFontSize(20)
                 .maxFontSize(30)
-                .fontColor('darkolivegreen')
+                .fontColor('black')
                 .position('center')
                 .anchor('center')
                 .hAlign('center')
@@ -173,14 +155,14 @@
 
             chart.center().content(label); 
 
-            chart.hovered().fill('darkolivegreen'); 
-            chart.selected().fill('olive'); 
+            chart.hovered().fill('white'); 
+            chart.selected().fill('pink'); 
 
             chart
                 .hovered()
                 .outline()
                 .fill(function() {
-                    return anychart.color.lighten('darkolivegreen', 0.55);
+                    return anychart.color.lighten('pink', 0.55);
                 }); 
 
             chart
@@ -188,7 +170,7 @@
                 .outline()
                 .offset(5)
                 .fill(function () {
-                return anychart.color.lighten('olive', 0.25);
+                return anychart.color.lighten('pink', 0.25);
             });
 
             chart.draw(); 
@@ -207,158 +189,6 @@
 
 
     </script>
-
-    <!--
-
-
-    <div class="inside">
-        <div class="split left">
-            <form action="/analytics.html" method="post">
-                <input type="submit" name="mybutton" value="Click me">
-            </form>
-            <h1 class = "top-5-head">Top 5 most POPULAR products:</h1>
-            <div class = "top-5-products" id = "top-5-products"></div>        
-        </div>
-
-        <div class = "split right">
-            <div class="wrapper">
-                <div class="list">
-                    <label for = "top-buyers" style="font-size: 40px">TOP Buyers This Week For: </label>
-                    <select id="top-buyers" style="font-size:40px; color:darkolivegreen">
-                        <option value="unselected">Unselected</option>
-                        <option value="hot-dog">Hot Dog</option>
-                        <option value="bubble-tea">Bubble Tea</option>
-                        <option value="mochinut">Mochinut</option>
-                        <option value="spicy-rice-cakes">Spicy Rice Cakes</option>
-                    </select>
-            
-                    <div class="content">
-                        <div id ="unselected" class="data">
-                            <h4>Choose a Category to See Analytics</h4>
-                        </div>
-                        <div id ="hot-dog" class="data">
-                            <ol>
-                                <li>Harry Potter</li>
-                                <li>Draco Malfoy</li>
-                                <li>Hermione Granger</li>
-                                <li>Ron Weasley</li>
-                                <li>Severus Snape</li>
-                            </ol>
-                        </div>
-                        <div id ="bubble-tea" class="data">
-                            <ol>
-                                <li>Percy Jackson</li>
-                                <li>Annabeth Chase</li>
-                                <li>Thalia Grace</li>
-                                <li>Nico di Angelo</li>
-                                <li>Luke Castellan</li>
-                            </ol>
-                        </div>
-                        <div id ="mochinut" class="data">
-                            <ol>
-                                <li>Padme Amidala</li>
-                                <li>Anakin Skywalker</li>
-                                <li>ObiWan Kenobi</li>
-                                <li>Boba Fett</li>
-                                <li>Han Solo</li>
-                            </ol>
-                        </div>
-                        <div id ="spicy-rice-cakes" class="data">
-                            <ol>
-                                <li>Nathasha Romanoff</li>
-                                <li>Steve Rogers</li>
-                                <li>Tony Stark</li>
-                                <li>Thor Odinson</li>
-                                <li>Wanda Maximoff</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>   
-            </div>
-        </div>
-
-        <div class="split bottom">
-            <form action = "/success" method = "post" enctype = "multipart/form-data">
-                <input type = "file" name = "file" multiple/>
-                <input type = "submit" value="Upload" />
-            </form>
-
-            <a class = "database" href="table.html">Check Out Database of Customers</a>
-
-        </div>
-    </div>
-
-        <script type="text/javascript">
-        anychart.onDocumentReady(function() {
-            {% if chart_data %}
-            var chart_data = {{ chart_data|tojson|safe }};
-
-            const items = [];
-            for (const [label, value] of chart_data){
-                items.push({x: label, value: value});
-            }
-
-            var data = anychart.data.set(items);
-
-            var chart = anychart.pie(data); 
-
-            chart.container('top-5-products'); 
-
-            chart
-                .innerRadius('65%')
-                .explode(25)
-
-            var label = anychart.standalones.label(); 
-            label
-                .enabled(true)
-                .text('Top 5 most POPULAR products')
-                .width('100%')
-                .height('100%')
-                .adjustFontSize(true, true)
-                .minFontSize(20)
-                .maxFontSize(30)
-                .fontColor('darkolivegreen')
-                .position('center')
-                .anchor('center')
-                .hAlign('center')
-                .vAlign('middle'); 
-
-            chart.center().content(label); 
-
-            chart.hovered().fill('darkolivegreen'); 
-            chart.selected().fill('olive'); 
-
-            chart
-                .hovered()
-                .outline()
-                .fill(function() {
-                    return anychart.color.lighten('darkolivegreen', 0.55);
-                }); 
-
-            chart
-                .selected()
-                .outline()
-                .offset(5)
-                .fill(function () {
-                return anychart.color.lighten('olive', 0.25);
-            });
-
-            chart.draw(); 
-            {% endif %}
-
-        });  
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $("#top-buyers").on('change', function() {
-                $(".data").hide(); 
-                $("#" + $(this).val()).fadeIn(700); 
-            }).change(); 
-        }); 
-    </script>
-
--->
 
 </body>
 </html>
