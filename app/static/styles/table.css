@@ -12,6 +12,11 @@
     background-color: #fbe3e8; 
 }
 
+.card-header {
+    background-color: #ebf6f5!important; 
+    color: #5cbdb9;
+}
+
 td, th {
     font-size: 9px; 
 }
