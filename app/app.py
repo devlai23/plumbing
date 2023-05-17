@@ -373,10 +373,10 @@ def send():
 @requires_auth
 def analytics():
     #if 'mybutton' in request.form:
-    cur = mysql.connection.cursor
-    number = int(request.args.get("number"))
-    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT " + number
+    cur = mysql.connection.cursor()
+    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
     cur.execute(query)
+
     rows = cur.fetchall()
     popular_items = []
     for row in rows:
@@ -405,7 +405,19 @@ def analytics():
     #return render_template('analytics.html', topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)
     return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)  
 
-    
+
+# @app.route("/analytics.html")
+# @requires_auth
+# def pie_chart():
+#     print("hello")
+#     cur = mysql.connection.cursor()
+#     print("bye")
+#     num = request.form['product-num']
+#     print(num)
+#     query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT " + num
+#     cur.execute(query)
+#     return render_template('analytics.html')
+
 @app.route("/table.html")
 @requires_auth
 def table():

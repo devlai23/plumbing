@@ -72,12 +72,15 @@
     </div>
 
     <div class="card mt-4  mx-auto" style="width: 50rem;">
-        <h5 class="card-header">Top <form id="popular-products">
+        <h5 class="card-header">Top 5 most POPULAR products at Mochinut Tenafly:</h5>
+        <!-- <form id="popular-products">
             <input type="number" min="1" max="9" value="5" required class="form-control" placeholder="Enter a # less than 10" id="product-num" name="product-num">
-        </form> most POPULAR products at Mochinut Tenafly:</h5>
+        </form> -->
+        
         <div class="card-body">
             <form action="/analytics.html" method="post">
             </form>
+            <div class = "top-5-products" id = "top-5-products"></div>  
         </div>
       </div>
 
@@ -155,8 +158,8 @@
 
             chart.center().content(label); 
 
-            chart.hovered().fill('white'); 
-            chart.selected().fill('pink'); 
+            chart.hovered().fill('blue'); 
+            chart.selected().fill('blue'); 
 
             chart
                 .hovered()
