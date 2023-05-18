@@ -374,7 +374,8 @@ def send():
 def analytics():
     #if 'mybutton' in request.form:
     cur = mysql.connection.cursor()
-    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
+    number = int(request.args.get("number"))
+    query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT " + number
     cur.execute(query)
 
     rows = cur.fetchall()
