@@ -386,6 +386,8 @@ def analytics():
     top_buyers = []
     top_buyers = request.args.get('top-buyers')
     top_buyersMilkTea = []
+    top_buyersSpicyRiceCake = []
+    top_buyersHotDog = []
     selected = request.args.get('selected')
     cur = mysql.connection.cursor()
     queryMochi = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"1 MOCHINUT\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
@@ -394,6 +396,12 @@ def analytics():
     topBuyerRows = cur.fetchall()
     cur.execute(queryBubbleTea)
     topBubbleRows = cur.fetchall()
+    queryRiceCake = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"SMALL TTEOKKOCHI\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
+    cur.execute(queryRiceCake)
+    topRiceRows = cur.fetchall()
+    queryHotDog = f"select Purchases.Item, Customer.Customer_Name, count(*) from Purchases INNER JOIN Customer ON Purchases.Customer_ID=Customer.Customer_ID where Purchases.Item like \"ORIGINAL 1\" Group By Customer.Customer_Name Order by count(*) DESC LIMIT 5;"
+    cur.execute(queryHotDog)
+    topHotDogRows = cur.fetchall()
     if topBuyerRows:
         top_buyers = [row[1] for row in topBuyerRows]
     else:
@@ -402,8 +410,16 @@ def analytics():
         top_buyersMilkTea = [row[1] for row in topBubbleRows]
     else:
         top_buyersMilkTea = []
+    if topRiceRows:
+        top_buyersSpicyRiceCake = [row[1] for row in topRiceRows]
+    else:
+        top_buyersSpicyRiceCake = []
+    if topHotDogRows:
+        top_buyersHotDog = [row[1] for row in topHotDogRows]
+    else:
+        top_buyersHotDog = []
     #return render_template('analytics.html', topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)
-    return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)  
+    return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea, top_buyersSpicyRiceCake= top_buyersSpicyRiceCake, top_buyersHotDog= top_buyersHotDog)  
 
 
 # @app.route("/analytics.html")
