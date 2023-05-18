@@ -15,6 +15,7 @@ from functools import wraps
 from PIL import Image
 import io
 import Order
+import time
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -249,11 +250,10 @@ def send():
         string = str(cur.fetchall())
         tup = eval(string)
         emailArr = [elem[0] for elem in tup]
-        print(emailArr)
 
 
         image = request.files['file']
-        text = request.form['textbox']
+        OGtext = request.form['textbox']
 
         image_folder = os.path.join(APP_ROOT, 'images')
         image_path = os.path.join(image_folder, image.filename)
@@ -262,19 +262,49 @@ def send():
         with open(image_path, 'rb') as f:
             image_data = f.read()
 
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=emailArr)
-        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-            email_template = f.read()
+        print(emailArr)
+        print(type(emailArr))
 
-        # attach the image to the email
-        with app.open_resource(image_path) as fp:
-            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+        for email in emailArr:
+            text = OGtext
+            print(email)
+            encoded_image = base64.b64encode(image_data).decode('utf-8')
+            msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
+            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+                email_template = f.read()
 
-        # set the HTML content with a reference to the attached image
-        msg.html = email_template.format(image_cid='image', text=text)
-        mail.send(msg)
-        email_sent = True
+            # attach the image to the email
+            with app.open_resource(image_path) as fp:
+                msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+
+            # replace any [name] with customer names
+            if "[name]" in text:
+                cur = mysql.connection.cursor()
+                query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
+                print(query)
+                cur.execute(query)
+                rv = str(cur.fetchall())
+                if ',' in rv:
+                    first_name = rv.split(',')[1].strip().rstrip("',)")
+                    text = text.replace("[name]", first_name)
+                else:
+                    text = text.replace("[name]", "Customer")
+            
+            if "[points]" in text:
+                print("entered")
+                cur = mysql.connection.cursor()
+                query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
+                cur.execute(query)
+                rv = str(cur.fetchall())
+                decimalPart = re.search(r"\d+\.\d+", rv).group(0)
+                intPoints = int(decimalPart.split(".")[0])
+                text = text.replace("[points]", str(intPoints))
+
+            # set the HTML content with a reference to the attached image
+            msg.html = email_template.format(image_cid='image', text=text)
+            mail.send(msg)
+            email_sent = True
+            print("finished")
 
         return render_template('email.html', email_sent=email_sent)
 
