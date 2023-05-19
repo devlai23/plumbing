@@ -94,7 +94,6 @@ def login():
     )
 
 @app.route("/index.html")
-@requires_auth
 def index():
     return render_template("index.html")
 
