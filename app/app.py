@@ -15,7 +15,6 @@ from functools import wraps
 from PIL import Image
 import io
 import Order
-import time
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
