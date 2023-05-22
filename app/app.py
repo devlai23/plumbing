@@ -473,18 +473,6 @@ def analytics():
     return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea, top_buyersSpicyRiceCake= top_buyersSpicyRiceCake, top_buyersHotDog= top_buyersHotDog)  
 
 
-# @app.route("/analytics.html")
-# @requires_auth
-# def pie_chart():
-#     print("hello")
-#     cur = mysql.connection.cursor()
-#     print("bye")
-#     num = request.form['product-num']
-#     print(num)
-#     query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT " + num
-#     cur.execute(query)
-#     return render_template('analytics.html')
-
 @app.route("/table.html")
 @requires_auth
 def table():
