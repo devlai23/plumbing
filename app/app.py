@@ -14,7 +14,7 @@ import datetime
 from functools import wraps
 from PIL import Image
 import io
-import Order
+# import Order
 
 ROOT_DIR = os.path.abspath(os.curdir)
 ENV_FILE = find_dotenv()
@@ -84,6 +84,29 @@ def isSanatized(strArg):
     if strArg.isalnum() == True:
         return True
     return False
+
+class Order:
+    def __init__(self, invoiceID, date, item):
+        self.invoiceID = invoiceID
+        self.date = date
+        self.item = item
+        self.customerID = -1
+
+    def setCustomerID(self, customerID):
+        self.customerID = customerID
+
+    def getInvoice(self):
+        return self.invoiceID
+
+    def getDate(self):
+        return self.date
+    
+    def __str__(self):
+     return str(self.invoiceID) + "\n" + str(self.date) + "\n" + str(self.item) + "\n" + str(self.customerID) + "\n"
+
+    def insertQuery(self):
+        formatted = "INSERT INTO Purchases(Invoice_ID, Item, Customer_ID, Date) VALUES (" + str(self.invoiceID) + ", \"" + str(self.item) + "\", " + str(self.customerID) + ", \"" + str(self.date) + "\")"
+        return formatted
 
 
 @app.route("/")
@@ -609,7 +632,7 @@ def success():
                     break
             #if true, it's a new order
             if newValue != "" and int(newValue) > lastPos:
-                order = Order.Order(int(newValue), bookSheet.cell(row, 1).value, bookSheet.cell(row, 2).value)
+                order = Order(int(newValue), bookSheet.cell(row, 1).value, bookSheet.cell(row, 2).value)
                 newOrders.append(order)
         print("TESTFLOW:", str(len(newOrders)), "new orders were found")
 
@@ -692,30 +715,6 @@ def success():
         os.remove(path3)
         cur.close()
         return render_template("analytics.html")
-
-# class Order:
-#     def __init__(self, invoiceID, date, item):
-#         self.invoiceID = invoiceID
-#         self.date = date
-#         self.item = item
-#         self.customerID = -1
-
-#     def setCustomerID(self, customerID):
-#         self.customerID = customerID
-
-#     def getInvoice(self):
-#         return self.invoiceID
-
-#     def getDate(self):
-#         return self.date
-    
-#     def __str__(self):
-#      return str(self.invoiceID) + "\n" + str(self.date) + "\n" + str(self.item) + "\n" + str(self.customerID) + "\n"
-
-#     def insertQuery(self):
-#         formatted = "INSERT INTO Purchases(Invoice_ID, Item, Customer_ID, Date) VALUES (" + str(self.invoiceID) + ", \"" + str(self.item) + "\", " + str(self.customerID) + ", \"" + str(self.date) + "\")"
-#         return formatted
-
 
 
 if __name__ == "__main__":
