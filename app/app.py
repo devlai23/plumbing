@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, jsonify, render_template_string
+from flask import Flask, render_template, request, redirect, session, url_for
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from dotenv import find_dotenv, load_dotenv
@@ -231,11 +231,13 @@ def send():
                 query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
                 cur.execute(query)
                 rv = str(cur.fetchall())
-                decimalPart = re.search(r"\d+\.\d+", rv).group(0)
-                intPoints = int(decimalPart.split(".")[0])
-                text = text.replace("[points]", str(intPoints))
+                print (rv)
+                match = re.search(r"\d+", rv)
+                number = int(match.group())
+                text = text.replace("[points]", str(number))
 
             # set the HTML content with a reference to the attached image
+            print(text)
             msg.html = email_template.format(image_cid='image', text=text)
             mail.send(msg)
             email_sent = True
