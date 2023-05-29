@@ -234,26 +234,34 @@ def send():
 
 
 
-    image = request.files['file']
+    image = request.files.get('file')
     OGtext = request.form['textbox']
 
-    image_folder = os.path.join(APP_ROOT, 'images')
-    image_path = os.path.join(image_folder, image.filename)
-    image.save(image_path)
+    image_data = None
+    if image:
+        image_folder = os.path.join(APP_ROOT, 'images')
+        image_path = os.path.join(image_folder, image.filename)
+        image.save(image_path)
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
 
-    with open(image_path, 'rb') as f:
-        image_data = f.read()
+
     #code runs for all  
     for email in emailArr:
         text = OGtext
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
+        msg = Message('Subject', sender="info@mochinut-tenafly.com", recipients=[email])
         with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
             email_template = f.read()
+        with open(os.path.join(APP_ROOT, 'email_templateNO.html'), 'r') as f:
+            email_templateNO = f.read()
 
         # attach the image to the email
-        with app.open_resource(image_path) as fp:
-            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
+        encoded_image = None
+        if image_data:
+            print("attaching")
+            encoded_image = base64.b64encode(image_data).decode('utf-8')
+            with app.open_resource(image_path) as fp:
+                msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
 
         # replace any [name] with customer names
         if "[name]" in text:
@@ -278,12 +286,16 @@ def send():
             match = re.search(r"\d+", rv)
             number = int(match.group())
             text = text.replace("[points]", str(number))
+        
+        if image:
+            print("image")
+            msg.html = email_template.format(image_cid='image', text=text)
+        else:
+            print("no image")
+            msg.html = email_templateNO.format(text=text)
 
-        # set the HTML content with a reference to the attached image
-        msg.html = email_template.format(image_cid='image', text=text)
         mail.send(msg)
         email_sent = True
-        print("finished")
 
     return render_template('email.html', email_sent=email_sent)    
 
