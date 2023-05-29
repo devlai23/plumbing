@@ -123,7 +123,7 @@ def index():
 def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
-    return redirect("/index.html")
+    return redirect("/analytics.html")
 
 @app.route("/logout.html")
 def logout():
