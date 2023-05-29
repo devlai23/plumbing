@@ -80,7 +80,9 @@
         <div class="card-body">
             <form action="/analytics.html" method="post">
             </form>
-            <div class = "top-5-products" id = "top-5-products"></div>  
+            <!-- <div class = "top-5-products" id = "top-5-products"></div>   -->
+            <div id="top-5-products" style="width: 760px; height: 300px;"></div>
+
         </div>
       </div>
 
@@ -149,7 +151,9 @@
 
             var chart = anychart.pie(data); 
 
-            chart.container('top-5-products'); 
+            chart.container('top-5-products')
+                .width('760px')
+                .height('300px');             
 
             chart
                 .innerRadius('65%')
