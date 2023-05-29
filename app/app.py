@@ -193,77 +193,6 @@ def send():
     if send_type == 'send-manually':
         email = request.form['manual_emails']
         emailArr = email.split()
-        image = request.files['file']
-        text = request.form['textbox']
-
-        image_folder = os.path.join(APP_ROOT, 'images')
-        image_path = os.path.join(image_folder, image.filename)
-        image.save(image_path)
-
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
-
-        for email in emailArr:
-            encoded_image = base64.b64encode(image_data).decode('utf-8')
-            msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
-            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-                email_template = f.read()
-
-            # attach the image to the email
-            with app.open_resource(image_path) as fp:
-                msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
-
-            # replace any [name] with customer names
-            if "[name]" in text:
-                cur = mysql.connection.cursor()
-                query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
-                cur.execute(query)
-                rv = str(cur.fetchall())
-                if ',' in rv:
-                    first_name = rv.split(',')[1].strip().rstrip("',)")
-                    text = text.replace("[name]", first_name)
-                else:
-                    text = text.replace("[name]", "Customer")
-            
-            if "[points]" in text:
-                print("entered")
-                cur = mysql.connection.cursor()
-                query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
-                cur.execute(query)
-                rv = str(cur.fetchall())
-                print (rv)
-                match = re.search(r"\d+", rv)
-                number = int(match.group())
-                text = text.replace("[points]", str(number))
-
-            # set the HTML content with a reference to the attached image
-            print(text)
-            msg.html = email_template.format(image_cid='image', text=text)
-            mail.send(msg)
-            email_sent = True
-            print("email_sent:", email_sent)
-            return render_template('email.html', email_sent=email_sent)
-            
-
-        # encoded_image = base64.b64encode(image_data).decode('utf-8')
-        # msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=emailArr)
-        # with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-        #     email_template = f.read()
-
-        # # attach the image to the email
-        # with app.open_resource(image_path) as fp:
-        #     msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
-
-        # # set the HTML content with a reference to the attached image
-        # msg.html = email_template.format(image_cid='image', text=text)
-        # mail.send(msg)
-
-        # email_sent = True
-
-        # print("email_sent:", email_sent)
-
-
-        # return render_template('email.html', email_sent=email_sent)
     
     elif send_type == 'send-all':
         #RUN QUERY TO GET ARRAY WITH ALL EMAIL ADDRESSES
@@ -273,63 +202,6 @@ def send():
         string = str(cur.fetchall())
         tup = eval(string)
         emailArr = [elem[0] for elem in tup]
-
-
-        image = request.files['file']
-        OGtext = request.form['textbox']
-
-        image_folder = os.path.join(APP_ROOT, 'images')
-        image_path = os.path.join(image_folder, image.filename)
-        image.save(image_path)
-
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
-
-        print(emailArr)
-        print(type(emailArr))
-
-        for email in emailArr:
-            text = OGtext
-            print(email)
-            encoded_image = base64.b64encode(image_data).decode('utf-8')
-            msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
-            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-                email_template = f.read()
-
-            # attach the image to the email
-            with app.open_resource(image_path) as fp:
-                msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
-
-            # replace any [name] with customer names
-            if "[name]" in text:
-                cur = mysql.connection.cursor()
-                query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
-                print(query)
-                cur.execute(query)
-                rv = str(cur.fetchall())
-                if ',' in rv:
-                    first_name = rv.split(',')[1].strip().rstrip("',)")
-                    text = text.replace("[name]", first_name)
-                else:
-                    text = text.replace("[name]", "Customer")
-            
-            if "[points]" in text:
-                print("entered")
-                cur = mysql.connection.cursor()
-                query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
-                cur.execute(query)
-                rv = str(cur.fetchall())
-                decimalPart = re.search(r"\d+\.\d+", rv).group(0)
-                intPoints = int(decimalPart.split(".")[0])
-                text = text.replace("[points]", str(intPoints))
-
-            # set the HTML content with a reference to the attached image
-            msg.html = email_template.format(image_cid='image', text=text)
-            mail.send(msg)
-            email_sent = True
-            print("finished")
-
-        return render_template('email.html', email_sent=email_sent)
 
     elif send_type == 'send-bdays':
         cur = mysql.connection.cursor()
@@ -351,54 +223,31 @@ def send():
         string = str(cur.fetchall())
         tup = eval(string)
         emailArr = [elem[0] for elem in tup]
-
-        image = request.files['file']
-        text = request.form['textbox']
-
-        image_folder = os.path.join(APP_ROOT, 'images')
-        image_path = os.path.join(image_folder, image.filename)
-        image.save(image_path)
-
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
-
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
-        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-            email_template = f.read()
-
-        # attach the image to the email
-        with app.open_resource(image_path) as fp:
-            msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
-
-        # set the HTML content with a reference to the attached image
-        msg.html = email_template.format(image_cid='image', text=text)
-        mail.send(msg)
-        email_sent = True
-
-        return render_template('email.html')
     
     elif send_type == 'top-ranks':
         cur = mysql.connection.cursor()
         emailArr = """SELECT Customer_Email FROM Customer WHERE Customer_Rank IS NOT NULL ORDER BY Customer_Rank ASC LIMIT 10"""
-        
         cur.execute(emailArr)
         string = str(cur.fetchall())
         tup = eval(string)
         emailArr = [elem[0] for elem in tup]
 
-        image = request.files['file']
-        text = request.form['textbox']
 
-        image_folder = os.path.join(APP_ROOT, 'images')
-        image_path = os.path.join(image_folder, image.filename)
-        image.save(image_path)
 
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
+    image = request.files['file']
+    OGtext = request.form['textbox']
 
+    image_folder = os.path.join(APP_ROOT, 'images')
+    image_path = os.path.join(image_folder, image.filename)
+    image.save(image_path)
+
+    with open(image_path, 'rb') as f:
+        image_data = f.read()
+    #code runs for all  
+    for email in emailArr:
+        text = OGtext
         encoded_image = base64.b64encode(image_data).decode('utf-8')
-        msg = Message('Image', sender="mochinutloyalty@gmail.com", recipients=emailArr)
+        msg = Message('Image', sender="info@mochinut-tenafly.com", recipients=[email])
         with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
             email_template = f.read()
 
@@ -406,21 +255,37 @@ def send():
         with app.open_resource(image_path) as fp:
             msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
 
+        # replace any [name] with customer names
+        if "[name]" in text:
+            cur = mysql.connection.cursor()
+            query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
+            print(query)
+            cur.execute(query)
+            rv = str(cur.fetchall())
+            if ',' in rv:
+                first_name = rv.split(',')[1].strip().rstrip("',)")
+                text = text.replace("[name]", first_name)
+            else:
+                text = text.replace("[name]", "Customer")
+        
+        if "[points]" in text:
+            print("entered")
+            cur = mysql.connection.cursor()
+            query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
+            cur.execute(query)
+            rv = str(cur.fetchall())
+            print (rv)
+            match = re.search(r"\d+", rv)
+            number = int(match.group())
+            text = text.replace("[points]", str(number))
+
         # set the HTML content with a reference to the attached image
         msg.html = email_template.format(image_cid='image', text=text)
         mail.send(msg)
         email_sent = True
+        print("finished")
 
-        return render_template('email.html')
-
-        
-    else:
-        email_sent = False
-
-        print("email_sent:", email_sent)
-
-        return render_template('email.html')
-    
+    return render_template('email.html', email_sent=email_sent)    
 
 @app.route("/analytics.html")
 @requires_auth
