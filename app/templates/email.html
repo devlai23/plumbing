@@ -82,11 +82,19 @@
                 <input class="form-control" type="file" name="file" id="formFile">
               </div>
               <br>
+
+              <label for="subject">Enter your subject:</label>
+              <div class="input-group input-group-lg mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-lg"></span>
+                <input type="text" name="subject" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
+              </div>
+
               <label for="textbox">Enter your message:</label>
               <div class="input-group input-group-lg">
                 <span class="input-group-text" id="inputGroup-sizing-lg"></span>
                 <input type="text" name="textbox" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
               </div>
+              
               <br>
               <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Submit</button>
               <form method="post" action="/send-email">

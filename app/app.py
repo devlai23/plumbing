@@ -235,6 +235,7 @@ def send():
 
 
     image = request.files.get('file')
+    subject = request.form['subject']
     OGtext = request.form['textbox']
 
     image_data = None
@@ -249,7 +250,7 @@ def send():
     #code runs for all  
     for email in emailArr:
         text = OGtext
-        msg = Message('Subject', sender="info@mochinut-tenafly.com", recipients=[email])
+        msg = Message(subject, sender="info@mochinut-tenafly.com", recipients=[email])
         with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
             email_template = f.read()
         with open(os.path.join(APP_ROOT, 'email_templateNO.html'), 'r') as f:
