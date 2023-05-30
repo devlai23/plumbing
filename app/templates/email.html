@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    {% if email_sent %}
+    <!-- {% if email_sent %}
     <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -164,37 +164,8 @@
           </div>
       </div>
   </div>
-  {% endif %}
+  {% endif %} -->
 
-  <!-- <div class="modal fade" id="preview-modal" tabindex="-1" role="dialog" aria-labelledby="emailPreviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="emailPreviewModalLabel">Email Preview</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" id="emailPreviewContent">
-          Email preview content will be dynamically added here
-        </div>
-      </div>
-    </div>
-  </div> -->
-    
-  <!-- <script>
-    window.addEventListener('load', function() {
-    // Clear the textbox value
-    document.getElementById('manual_emails').value = '';
-    document.getElementById('textbox').value='';
-
-    // Clear the selected radio button
-    var radioButtons = document.getElementsByName('send-option');
-    for (var i = 0; i < radioButtons.length; i++) {
-      radioButtons[i].checked = false;
-    }
-    });
-  </script> -->
   <!-- <script>
     $(document).ready(function() {
       var emailSent = '{{ email_sent|lower }}';
@@ -220,7 +191,7 @@
           $('.dropdown-toggle').html($(this).text());
       });
     });  
-      
+    
     $(document).ready(function(){
       $('#dropdown-menu input').click(function(){
         if ($(this).attr('id') === 'send-manually') {
@@ -230,32 +201,32 @@
         }
       });
     });
-    </script>
-     <script>
-      const previewButton = document.querySelector('#preview-button');
-      const emailInput = document.querySelector('#manual_emails');
-      const fileInput = document.querySelector('#file');
-      const textInput = document.querySelector('#textbox');
-  
-      previewButton.addEventListener('click', async () => {
-          const formData = new FormData();
-          formData.append('manual_emails', emailInput.value);
-          formData.append('file', fileInput.files[0]);
-          formData.append('textbox', textInput.value);
-  
-          const response = await fetch('/preview-email', {
-              method: 'POST',
-              body: formData,
-          });
-  
-          const preview = await response.json();
-          const previewWindow = window.open('', 'Email Preview');
-          previewWindow.document.write(`
-              <h2>To: ${preview.email}</h2>
-              <img src="data:image/png;base64,${preview.image_data}">
-              ${preview.html_content}
-          `);
-      });
-    </script>
+  </script>
+  <script>
+    const previewButton = document.querySelector('#preview-button');
+    const emailInput = document.querySelector('#manual_emails');
+    const fileInput = document.querySelector('#file');
+    const textInput = document.querySelector('#textbox');
+
+    previewButton.addEventListener('click', async () => {
+        const formData = new FormData();
+        formData.append('manual_emails', emailInput.value);
+        formData.append('file', fileInput.files[0]);
+        formData.append('textbox', textInput.value);
+
+        const response = await fetch('/preview-email', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const preview = await response.json();
+        const previewWindow = window.open('', 'Email Preview');
+        previewWindow.document.write(`
+            <h2>To: ${preview.email}</h2>
+            <img src="data:image/png;base64,${preview.image_data}">
+            ${preview.html_content}
+        `);
+    });
+  </script>
 </body>
 </html>
