@@ -191,6 +191,7 @@ def send():
 
     # if code can be streamlined
     if send_type == 'send-manually':
+        print("in python")
         email = request.form['manual_emails']
         emailArr = email.split()
     
@@ -298,7 +299,16 @@ def send():
         mail.send(msg)
         email_sent = True
 
-    return render_template('email.html', email_sent=email_sent)    
+        return render_template('email.html', email_sent=email_sent)
+
+        
+    else:
+        email_sent = False
+
+        print("email_sent:", email_sent)
+
+        return render_template('email.html', email_sent=email_sent)
+    
 
 @app.route("/analytics.html")
 @requires_auth

@@ -60,22 +60,34 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="fname" class = "form-label">First Name *</label>
-          <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" required>
+          <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" required pattern="[A-Za-z\s]+">
+          <div class="invalid-feedback">
+            Please enter a valid first name.
+          </div>
         </div>
         <div class="form-group col-md-6">
           <label for="lname" class = "form-label">Last Name *</label>
-          <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" required>
+          <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" required pattern="[A-Za-z\s]+">
+          <div class="invalid-feedback">
+            Please enter a valid last name.
+          </div>
         </div>
       </div>
       <div class="form-group">
         <label for="email" class = "form-label">Email</label>
-        <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+        <div class="invalid-feedback">
+          Please enter a valid email address.
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="pnumber" class = "form-label">Phone Number *</label>
-          <input type="text" class="form-control" id="pnumber" name="pnumber" placeholder="Phone Number" required>
+          <label for="pnumber" class = "form-label">Phone Number *  (ex: 2012012011) </label>
+          <input type="tel" class="form-control" id="pnumber" name="pnumber" placeholder="Phone Number" required pattern="[0-9]{10}">
+          <div class="invalid-feedback">
+            Please enter a valid phone number.
+          </div>
         </div>
         <div class="form-group col-md-4">
           <label for="bday" class = "form-label">Birthday</label>

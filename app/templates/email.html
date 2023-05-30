@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
     <title>Email Customers</title>
@@ -72,7 +73,7 @@
               </div>
             </div>
             <div class="textbox mt-10">
-              <input class="form-control" type="text" name="manual_emails" style="display:none" placeholder="Enter email addresses separated by spaces"/>
+              <input class="form-control mt-2" type="text" id="manual_emails" name="manual_emails" style="display:none" placeholder="Enter email addresses separated by spaces"/>
             </div>
 
             <br>
@@ -82,31 +83,46 @@
                 <input class="form-control" type="file" name="file" id="formFile">
               </div>
               <br>
-
-              <label for="subject">Enter your subject:</label>
-              <div class="input-group input-group-lg mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-lg"></span>
-                <input type="text" name="subject" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
+              <label for="textbox">Enter your message:</label> 
+              <button type="button" class="btn btn-outline-info ml-2" data-toggle="modal" data-target="#infoModal">
+                <i class="fas fa-info-circle"></i>
+              </button>
+              <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="infoModalLabel">Info</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      Customize your email using keywords!<br>
+                      [name] -> Customer Name<br>
+                      [points] -> Customer Points
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              <label for="textbox">Enter your message:</label>
-              <div class="input-group input-group-lg">
+              <div class="input-group input-group-lg mt-3">
                 <span class="input-group-text" id="inputGroup-sizing-lg"></span>
-                <input type="text" name="textbox" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
+                <input type="text" id="textbox" name="textbox" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
               </div>
-              
-              <br>
-              <button type="submit" class="btn btn-outline-info btn-sm text-right" name = "mybutton">Submit</button>
               <form method="post" action="/send-email">
-                <button type="submit" name="preview" value="1">Preview Email</button>
+                <br>
+                <button type="submit" class="btn btn-outline-info btn-sm text-right" id = "submit-btn" name = "mybutton">Submit</button>
               </form>
             </div>
           </form>
+          <button class="btn btn-outline-secondary btn-sm mt-3" id="preview-button" name="preview-button" value="1">Preview Email</button>
         </div>
     </div>
 
     {% if email_sent %}
-      <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -119,7 +135,7 @@
             You have successfully sent an email to your customers!
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="success-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -138,31 +154,69 @@
                   There was an error sending the email. Please try again later.
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" id="error-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
           </div>
       </div>
   </div>
   {% endif %}
 
-  
-
-
+  <!-- <div class="modal fade" id="preview-modal" tabindex="-1" role="dialog" aria-labelledby="emailPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailPreviewModalLabel">Email Preview</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="emailPreviewContent">
+          Email preview content will be dynamically added here
+        </div>
+      </div>
+    </div>
+  </div> -->
     
-    <script type="module" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type = "text/javascript">
-      $(document).ready(function() {
-        $('#success-modal').modal('show'); 
-      });
+  <!-- <script>
+    window.addEventListener('load', function() {
+    // Clear the textbox value
+    document.getElementById('manual_emails').value = '';
+    document.getElementById('textbox').value='';
 
-      $(document).ready(function(){
-        $('.dropdown-item').click(function(){
-            var selectedValue = $(this).data('value');
-            $('.dropdown-toggle').html($(this).text());
-        });
-        });  
+    // Clear the selected radio button
+    var radioButtons = document.getElementsByName('send-option');
+    for (var i = 0; i < radioButtons.length; i++) {
+      radioButtons[i].checked = false;
+    }
+    });
+  </script> -->
+  <script>
+    $(document).ready(function() {
+      var emailSent = '{{ email_sent|lower }}';
+      console.log(emailSent);
         
-        $(document).ready(function(){
+      document.getElementById("submit-btn").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent form submission
+        if (emailSent == 'true') {
+          console.log("success");
+          $('#success-modal').modal('show');
+        }
+        else {
+          console.log("error");
+          $('#error-modal').modal('show');
+        }
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function(){
+      $('.dropdown-item').click(function(){
+          var selectedValue = $(this).data('value');
+          $('.dropdown-toggle').html($(this).text());
+      });
+    });  
+      
+    $(document).ready(function(){
       $('#dropdown-menu input').click(function(){
         if ($(this).attr('id') === 'send-manually') {
           $('input[name="manual_emails"]').toggle($(this).val() === 'send-manually');
@@ -172,31 +226,35 @@
       });
     });
     </script>
-    <script>
-      const previewButton = document.querySelector('#preview-button');
-      const emailInput = document.querySelector('#manual_emails');
-      const fileInput = document.querySelector('#file');
-      const textInput = document.querySelector('#textbox');
-  
-      previewButton.addEventListener('click', async () => {
-          const formData = new FormData();
-          formData.append('manual_emails', emailInput.value);
-          formData.append('file', fileInput.files[0]);
-          formData.append('textbox', textInput.value);
-  
-          const response = await fetch('/preview-email', {
-              method: 'POST',
-              body: formData,
-          });
-  
-          const preview = await response.json();
-          const previewWindow = window.open('', 'Email Preview');
-          previewWindow.document.write(`
-              <h2>To: ${preview.email}</h2>
-              <img src="data:image/png;base64,${preview.image_data}">
-              ${preview.html_content}
-          `);
-      });
-    </script>
-    </div>
+    <!-- <script>
+    document.getElementById("preview-button").addEventListener("click", async (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    const previewButton = document.querySelector('#preview-button');
+    const emailInput = document.querySelector('#manual_emails');
+    const fileInput = document.querySelector('#formFile');
+    const textInput = document.querySelector('#textbox');
+
+    const formData = new FormData();
+    formData.append('manual_emails', emailInput.value);
+    formData.append('file', fileInput.files[0]);
+    formData.append('textbox', textInput.value);
+
+    const response = await fetch('/preview-email', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const preview = await response.json();
+    const emailPreviewContent = document.querySelector('#emailPreviewContent');
+    emailPreviewContent.innerHTML = `
+      <h2>To: ${preview.email}</h2>
+      <img src="data:image/png;base64,${preview.image_data}">
+      ${preview.html_content}
+    `;
+
+    const modal = document.getElementById('preview-modal');
+    $('#preview-modal').modal('show');
+  });
+  </script> -->
 </body>
