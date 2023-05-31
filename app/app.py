@@ -160,32 +160,38 @@ def send():
             print("Preview mode")
             email = request.form['manual_emails']
             emailArr = email.split()
-            image = request.files['file']
+            image = request.files.get('file')
             text = request.form['textbox']
 
-            image_folder = os.path.join(APP_ROOT, 'images')
-            image_path = os.path.join(image_folder, image.filename)
-            image.save(image_path)
+            if image:
+                image_folder = os.path.join(APP_ROOT, 'images')
+                image_path = os.path.join(image_folder, image.filename)
+                image.save(image_path)
 
-            with open(image_path, 'rb') as f:
-                image_data = f.read()
+                with open(image_path, 'rb') as f:
+                    image_data = f.read()
 
-            encoded_image = base64.b64encode(image_data).decode('utf-8')
+                encoded_image = base64.b64encode(image_data).decode('utf-8')
+                with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+                    email_template = f.read()
+
+                size = (400, 400)
+                img = Image.open(io.BytesIO(image_data))
+                img.thumbnail(size)
+                output = io.BytesIO()
+                img.save(output, format='PNG')
+                encoded_image = base64.b64encode(output.getvalue()).decode('utf-8')
+
             with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
                 email_template = f.read()
+            with open(os.path.join(APP_ROOT, 'email_templateNO.html'), 'r') as f:
+                email_templateNO = f.read()
 
-            size = (400, 400)
-            img = Image.open(io.BytesIO(image_data))
-            img.thumbnail(size)
-            output = io.BytesIO()
-            img.save(output, format='PNG')
-            encoded_image = base64.b64encode(output.getvalue()).decode('utf-8')
-
-            with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
-                email_template = f.read()
-
-            html_content = email_template.format(image_cid='image', text=text)
-            html_content = html_content.replace('cid:image', 'data:image/png;base64,' + encoded_image)
+            if image:
+                html_content = email_template.format(image_cid='image', text=text)
+                html_content = html_content.replace('cid:image', 'data:image/png;base64,' + encoded_image)
+            else:
+                html_content = email_templateNO.format(text=text)
 
             return html_content
 
