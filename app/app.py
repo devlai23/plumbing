@@ -314,7 +314,21 @@ def send():
 @requires_auth
 def analytics():
     #if 'mybutton' in request.form:
+    
     cur = mysql.connection.cursor()
+    query = """SELECT *
+            FROM Customer
+            WHERE STR_TO_DATE(Reg_Date, '%m/%d/%y %h:%i:%s %p') BETWEEN DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND LAST_DAY(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+            UNION
+            SELECT *
+            FROM Customer
+            WHERE STR_TO_DATE(Reg_Date, '%m/%d/%y %h:%i:%s %p') BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01') AND LAST_DAY(NOW());"""
+    cur.execute(query)
+    rv = str(cur.fetchall())
+    data = eval(rv)
+    message = ""
+    for inner_tuple in data:
+        message += str(inner_tuple[:5])
     query = "SELECT item, COUNT(*) AS popularity FROM Purchases GROUP BY item ORDER BY popularity DESC LIMIT 5"
     cur.execute(query)
 
@@ -360,7 +374,7 @@ def analytics():
     else:
         top_buyersHotDog = []
     #return render_template('analytics.html', topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea)
-    return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea, top_buyersSpicyRiceCake= top_buyersSpicyRiceCake, top_buyersHotDog= top_buyersHotDog)  
+    return render_template('analytics.html', chart_data=popular_items, topBuyers=top_buyers, selected = selected, top_buyersMilkTea= top_buyersMilkTea, top_buyersSpicyRiceCake= top_buyersSpicyRiceCake, top_buyersHotDog= top_buyersHotDog, message1= message)  
 
 
 @app.route("/table.html")

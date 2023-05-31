@@ -67,7 +67,7 @@
                 </div>
             </form>
             <a class = "database mr-4 btn btn-info" href="table.html">Check Out Complete Database of Customers</a>
-            <a class = "database mr-4 btn btn-info" href="latest.html">View Latest Customers</a>
+            <button id="copyButton" data-parameter="{{message1}}"> Copy New Customers </button>
         </div>
     </div>
 
@@ -208,7 +208,18 @@
             }).change(); 
         }); 
 
-
+    </script>
+    <script>
+        document.getElementById('copyButton').addEventListener('click', function(){
+            var queryResult = this.getAttribute('data-parameter');
+            var textarea = document.createElement('textarea');
+            textarea.value = queryResult;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy')
+            document.body.removeChild(textarea);
+            alert("Copied New Customers to Clipboard");
+        });
     </script>
 
 </body>
