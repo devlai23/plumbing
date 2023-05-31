@@ -197,7 +197,6 @@ def send():
 
     # if code can be streamlined
     if send_type == 'send-manually':
-        print("in python")
         email = request.form['manual_emails']
         emailArr = email.split()
     

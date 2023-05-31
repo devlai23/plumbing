@@ -126,64 +126,6 @@
       </div>
     </div>
 
-    <!-- {% if email_sent %}
-    <div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalLabel">Email Confirmation</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            You have successfully sent an email to your customers!
-          </div>
-          <div class="modal-footer">
-            <button type="button" id="success-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% else %}
-    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="modalLabel2">Email Error</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                  There was an error sending the email. Please try again later.
-              </div>
-              <div class="modal-footer">
-                  <button type="button" id="error-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-          </div>
-      </div>
-  </div>
-  {% endif %} -->
-
-  <!-- <script>
-    $(document).ready(function() {
-      var emailSent = '{{ email_sent|lower }}';
-      console.log(emailSent);
-        
-      document.getElementById("submit-btn").addEventListener("click", function(event) {
-        event.preventDefault(); // Prevent form submission
-        if (emailSent == 'true') {
-          console.log("success");
-          $('#success-modal').modal('show');
-        }
-        else {
-          console.log("error");
-          $('#error-modal').modal('show');
-        }
-      });
-    });
-  </script> -->
   <script>
     $(document).ready(function(){
       $('.dropdown-item').click(function(){
