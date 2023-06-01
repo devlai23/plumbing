@@ -252,20 +252,21 @@ def send():
         with open(image_path, 'rb') as f:
             image_data = f.read()
 
-
+    print(emailArr)
     #code runs for all  
+    email_sent = False
     for email in emailArr:
+        print(email)
         text = OGtext
         msg = Message(subject, sender="info@mochinut-tenafly.com", recipients=[email])
-        with open(os.path.join(APP_ROOT, 'email_template.html'), 'r') as f:
+        with open(os.path.join(APP_ROOT, 'email_template_send.html'), 'r') as f:
             email_template = f.read()
-        with open(os.path.join(APP_ROOT, 'email_templateNO.html'), 'r') as f:
+        with open(os.path.join(APP_ROOT, 'email_template_sendNO.html'), 'r') as f:
             email_templateNO = f.read()
 
         # attach the image to the email
         encoded_image = None
         if image_data:
-            print("attaching")
             encoded_image = base64.b64encode(image_data).decode('utf-8')
             with app.open_resource(image_path) as fp:
                 msg.attach(image.filename, 'image/png', fp.read(), 'inline', headers=[['Content-ID','<image>']])
@@ -274,7 +275,6 @@ def send():
         if "[name]" in text:
             cur = mysql.connection.cursor()
             query = "SELECT CASE WHEN COUNT(*) > 0 THEN Customer_Name ELSE 'Customer' END AS result FROM Customer WHERE Customer_Email = '" + email + "';"
-            print(query)
             cur.execute(query)
             rv = str(cur.fetchall())
             if ',' in rv:
@@ -284,35 +284,23 @@ def send():
                 text = text.replace("[name]", "Customer")
         
         if "[points]" in text:
-            print("entered")
             cur = mysql.connection.cursor()
             query = "SELECT COALESCE(Bonus, 0) as Bonus FROM Customer WHERE Customer_Email = '"+ email +"';"
             cur.execute(query)
             rv = str(cur.fetchall())
-            print (rv)
             match = re.search(r"\d+", rv)
             number = int(match.group())
             text = text.replace("[points]", str(number))
         
         if image:
-            print("image")
             msg.html = email_template.format(image_cid='image', text=text)
         else:
-            print("no image")
             msg.html = email_templateNO.format(text=text)
 
         mail.send(msg)
         email_sent = True
 
-        return render_template('email.html', email_sent=email_sent)
-
-        
-    else:
-        email_sent = False
-
-        print("email_sent:", email_sent)
-
-        return render_template('email.html', email_sent=email_sent)
+    return render_template('email.html', email_sent=email_sent)
     
 
 @app.route("/analytics.html")
